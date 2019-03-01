@@ -1,0 +1,15 @@
+{
+    "name": "gdmonlam/fcli",
+    "authors": [
+        {
+            "name": "MonGDCH",
+            "email": "985558837@qq.com"
+        }
+    ],
+    "autoload": {
+    	"psr-4": {
+	      	"Mon\\FCli\\" : "src/"
+	    }
+    },
+    "require": {}
+}

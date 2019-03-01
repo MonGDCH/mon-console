@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+date_default_timezone_set('PRC');
+
+require __DIR__ . '/../vendor/autoload.php';
+
+require __DIR__ . '/command/Demo.php';
+require __DIR__ . '/command/Test.php';
+
+$app = new \Mon\FCli\App;
+
+$app->addCommand('demo', Mon\FCli\test\Demo::class, 'This is Demo Command!');
+$app->addCommand('test', Mon\FCli\test\Test::class, 'This is Test Command!');
+$app->addCommand('hello', function(){
+	echo 'This is a Closure Command!';
+}, 'This is Hello Command!');
+
+$app->run();
