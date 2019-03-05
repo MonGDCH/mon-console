@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+date_default_timezone_set('PRC');
+
+require __DIR__ . '/../vendor/autoload.php';
+
+
+// Mon\console\libs\Show::write('Test');
+// Mon\console\libs\Show::write('Test', true, 3);
+// Mon\console\libs\Show::write('Test', true, true, false);
+Mon\console\libs\Show::write('Test', false, false, false);
+Mon\console\libs\Show::write('Demo', true, false);
+Mon\console\libs\Show::write(['aaaa', 'bbb', 'a' => 'ccc']);
+
+
+Mon\console\libs\Show::block('Hello Block!');
+Mon\console\libs\Show::block(['ni', 'hao']);
+
+Mon\console\libs\Show::splitLine(false);
+
+
+$data = [
+    ['a', 'b', 'c'],
+    ['d', 'e', 'f'],
+];
+
+Mon\console\libs\Table::create($data, 'test', ['columns' => ['id', 'A', 'F']]);
+
+$list = [
+    'a' => 'aaa',
+    'b' => 'bbb',
+];
+
+Mon\console\libs\Show::list([1, 2, 5]);
+Mon\console\libs\Show::list($list);
+

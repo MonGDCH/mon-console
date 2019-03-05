@@ -1,5 +1,12 @@
 {
-    "name": "gdmonlam/fcli",
+    "name": "mongdch/mon-console",
+    "description": "the php console utils.",
+    "version" : "1.0.0",
+    "license": "MIT",
+    "keywords": [
+        "cli",
+        "console"
+    ],
     "authors": [
         {
             "name": "MonGDCH",
@@ -8,8 +15,10 @@
     ],
     "autoload": {
     	"psr-4": {
-	      	"Mon\\FCli\\" : "src/"
+	      	"Mon\\console\\" : "src/"
 	    }
     },
-    "require": {}
+    "require": {
+        "php": ">=7.0.0"
+    }
 }

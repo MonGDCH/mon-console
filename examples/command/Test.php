@@ -1,20 +1,17 @@
 <?php
-namespace Mon\FCli\test;
 
-use Mon\FCli\Command;
-use Mon\FCli\util\Password;
-
-class Test extends Command
+class Test extends \Mon\console\Command
 {
 	/**
 	 * 执行指令
 	 *
 	 * @return [type] [description]
 	 */
-	public function execute()
+	public function execute($input, $output)
 	{
-		$name = $this->input->read('What\'s your name?  ');
-		$password = Password::interaction();
-		echo 'Hello '.$name.', Your password is '.$password;
+		$name = $input->read('What\'s your name?  ');
+		$password = $input->password();
+		
+		return $output->write('Hello '.$name.', Your password is '.$password);
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Mon\FCli\util;
+namespace Mon\console\libs;
 
 /**
  * 解析类库
@@ -24,8 +24,17 @@ final class Parse
 	public static function parseArgv(array $argv)
 	{
         $args = $short_opts = $long_opts = [];
+        $isCommand = true;
+        $command = null;
         while(null !== $token = array_shift($argv))
         {
+            // 第一个标签为指令
+            if($isCommand){
+                $command = $token;
+                $isCommand = false;
+                continue;
+            }
+
             // 处理options
             if($token[0] == '-'){
                 $isLong = false;
@@ -67,7 +76,7 @@ final class Parse
             }
         }
 
-        return [$args, $short_opts, $long_opts];
+        return [$command, $args, $short_opts, $long_opts];
 	}
 
 	/**

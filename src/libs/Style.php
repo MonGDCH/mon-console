@@ -1,5 +1,7 @@
 <?php
-namespace Mon\FCli\util;
+namespace Mon\console\libs;
+
+use STDOUT;
 
 /**
  * CLI染色库
@@ -112,6 +114,8 @@ class Style
     ];
 
     /**
+     * 文本染色
+     * 
      * @param string $text
      * @param string|int|array $style
      * @return string
@@ -124,11 +128,11 @@ class Style
         if (!self::supportColor()) {
             return self::clearColor($text);
         }
-        if (\is_string($style)) {
+        if (is_string($style)) {
             $color = isset(self::STYLES[$style]) ? self::STYLES[$style] : '0';
-        } elseif (\is_int($style)) {
+        } elseif (is_int($style)) {
             $color = $style;
-        } elseif (\is_array($style)) {
+        } elseif (is_array($style)) {
             $color = implode(';', $style);
         } elseif (strpos($text, '<') !== false) {
             return self::renderColor($text);
@@ -140,24 +144,25 @@ class Style
     }
 
     /**
-     * render color tag to color style
+     * 渲染颜色标签到颜色样式
+     *
      * @param string $text
      * @return mixed|string
      */
     public static function renderColor($text)
     {
-        if (!$text || false === strpos($text, '<')) {
+        if(!$text || false === strpos($text, '<')){
             return $text;
         }
-        // if don't support output color text, clear color tag.
-        if (!self::supportColor()) {
+        if(!self::supportColor()){
             return static::clearColor($text);
         }
-        if (!preg_match_all(self::COLOR_TAG, $text, $matches)) {
+        if(!preg_match_all(self::COLOR_TAG, $text, $matches)){
             return $text;
         }
-        foreach ((array)$matches[0] as $i => $m) {
-            if ($style = isset(self::STYLES[$matches[1][$i]]) ? self::STYLES[$matches[1][$i]] : null) {
+        foreach((array)$matches[0] as $i => $m)
+        {
+            if($style = isset(self::STYLES[$matches[1][$i]]) ? self::STYLES[$matches[1][$i]] : null){
                 $tag = $matches[1][$i];
                 $match = $matches[2][$i];
                 $replace = sprintf("\33[%sm%s\33[0m", $style, $match);
@@ -169,27 +174,27 @@ class Style
     }
 
     /**
+     * 清除染色
+     *
      * @param string $text
      * @return string
      */
     public static function clearColor($text)
     {
-        // return preg_replace('/\033\[(?:\d;?)+m/', '' , "\033[0;36mtext\033[0m");
         return preg_replace('/\\033\\[(?:\\d;?)+m/', '', strip_tags($text));
     }
 
     /**
-     * Returns true if STDOUT supports colorization.
-     * This code has been copied and adapted from
-     * \Symfony\Component\Console\Output\OutputStream.
+     * 如果STDOUT支持着色，返回true
+     *
      * @return boolean
      */
     public static function supportColor()
     {
-        if (DIRECTORY_SEPARATOR === '\\') {
+        if(DIRECTORY_SEPARATOR === '\\'){
             return '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI') || 'xterm' === getenv('TERM');
         }
-        if (!\defined('STDOUT')) {
+        if(!defined('STDOUT')){
             return false;
         }
 
@@ -197,12 +202,12 @@ class Style
     }
 
     /**
-     * Returns if the file descriptor is an interactive terminal or not.
-     * @param  int|resource $fileDescriptor
+     * 是否是交互式终端。
+     *
      * @return boolean
      */
     public static function isInteractive($fileDescriptor)
     {
-        return \function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
+        return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }
 }

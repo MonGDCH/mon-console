@@ -3,16 +3,22 @@
 date_default_timezone_set('PRC');
 
 require __DIR__ . '/../vendor/autoload.php';
-
 require __DIR__ . '/command/Demo.php';
 require __DIR__ . '/command/Test.php';
 
-$app = new \Mon\FCli\App;
+// 获取应用实例
+$app = \Mon\console\App::instance();
 
-$app->addCommand('demo', Mon\FCli\test\Demo::class, 'This is Demo Command!');
-$app->addCommand('test', Mon\FCli\test\Test::class, 'This is Test Command!');
-$app->addCommand('hello', function(){
-	echo 'This is a Closure Command!';
-}, 'This is Hello Command!');
+// 注册简单指令
+$app->add('test', Test::class, 'This is Test Command!');
 
+// 注册包含别名的指令
+$app->add('demo', Demo::class, ['alias' => 'd', 'desc' => 'This is Demo Command!']);
+
+// 使用匿名方法作为指令回调
+$app->add('hello', function($input, $output){
+    return $output->write('This is a Closure Command!');
+});
+
+// 运行指令
 $app->run();

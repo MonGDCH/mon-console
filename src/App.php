@@ -1,7 +1,7 @@
 <?php
-namespace Mon\FCli;
+namespace Mon\console;
 
-use Mon\FCli\Console;
+use Mon\console\Console;
 
 /**
  * 应用驱动
@@ -26,22 +26,15 @@ class App
     protected $console;
 
     /**
-     * 指令列表
-     *
-     * @var array
-     */
-    protected $commands = [];
-
-    /**
      * 获取实例
      *
      * @param  [type] $option [description]
      * @return [type]         [description]
      */
-    public static function instance($option = [])
+    public static function instance()
     {
         if(is_null(static::$instance)){
-            static::$instance = new static($option);
+            static::$instance = new static();
         }
 
         return static::$instance;
@@ -52,67 +45,40 @@ class App
      *
      * @param array $commands [description]
      */
-    protected function __construct($commands = [])
+    protected function __construct()
     {
-        $this->setCommand($commands);
         $this->console = new Console();
-        $this->init();
-    }
-
-    /**
-     * 初始化指令库
-     *
-     * @return [type] [description]
-     */
-    public function init()
-    {
-        // 加载指令
-        foreach($this->commands as $command => $callback)
-        {
-            if(is_string($command) && class_exists($command) && is_subclass_of($command, "\\Mon\\FCli\\Command")){
-                // $this->addCommand
-            }
-        }
     }
 
     /**
      * 注册指令
-     * 
-     * @param [type]         $command   指令名称
-     * @param string|Closure $handler   指令回调
-     * @param string         $desc      指令描述
+     *
+     * @param String $command [description]
      */
-    public function add($command, $handler, $desc = '')
+    public function add($command, $handle, $option = [])
     {
-        $this->console->addCommand($command, $handler, $desc);
+        $this->commands[] = $command;
+        $this->console->addCommand($command, $handle, $option);
         return $this;
     }
 
     /**
-     * 获取指令
+     * 执行指令
+     *
+     * @return [type] [description]
+     */
+    public function run()
+    {
+        return $this->console->run();
+    }
+
+    /**
+     * 获取自定义指令列表
      *
      * @return [type] [description]
      */
     public function getCommand()
     {
         return $this->commands;
-    }
-
-    /**
-     * 设置指令
-     *
-     * @param [type] $command  [description]
-     * @param [type] $callback [description]
-     */
-    public function setCommand($command, $callback = null)
-    {
-        if(is_array($command)){
-            $this->commands = array_merge($this->commands, $commands);
-        }
-        elseif(is_string($command)){
-            if(!is_null($callback)){
-
-            }
-        }
     }
 }

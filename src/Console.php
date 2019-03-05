@@ -1,11 +1,15 @@
 <?php
-namespace Mon\FCli;
+namespace Mon\console;
 
+use Closure;
 use Exception;
 use InvalidArgumentException;
-use Mon\FCli\CliException;
-use Mon\FCli\input\Input;
-use Mon\FCli\util\Style;
+use Mon\console\Command;
+use Mon\console\CliException;
+use Mon\console\Input;
+use Mon\console\Output;
+use Mon\console\libs\Style;
+
 
 /**
  * Mon-Console控制台
@@ -54,8 +58,14 @@ class Console
 	 * @var array
 	 */
 	protected $messages = [
-		'help'		=> 'Display help for a command',
-		'version'	=> 'Display this console version'
+		'help'		=> [
+			'alias'		=> 'h',
+			'desc'		=> 'Display help for command'
+		],
+		'version'	=> [
+			'alias'		=> 'v',
+			'desc'		=> 'Display this console version'
+		]
 	];
 
 	/**
@@ -63,9 +73,10 @@ class Console
 	 *
 	 * @param Input $input [description]
 	 */
-	public function __construct(Input $input = null)
+	public function __construct(Input $input = null, Output $output = null)
 	{
 		$this->input = $input ?: Input::instance();
+		$this->output = $output ?: Output::instance();
 		$this->command = $this->input->getCommand();
 	}
 
@@ -80,10 +91,10 @@ class Console
 		if(!$this->command){
 			return $this->showError();
 		}
-		elseif($this->command == 'help'){
+		elseif($this->command == 'help' || $this->command == '-h'){
 			return $this->showHelp();
 		}
-		elseif($this->command == 'version'){
+		elseif($this->command == 'version' || $this->command == '-v'){
 			return $this->showVersion();
 		}
 
@@ -91,14 +102,14 @@ class Console
 		$status = 0;
 		try{
 			if(isset($this->commands[$this->command])){
-				$status = $this->runHandler($this->command, $this->commands[$this->command]);
+				$status = $this->hanedle($this->command, $this->commands[$this->command]);
 			}
 			else{
                 return $this->showError("The command [{$this->command}] not exists!");
             }
 		}catch(Exception $e){
-			$status = $this->handlerException($e);
-			$error = printf("Exception(%d): %s\nFile: %s(Line %d)\nTrace:\n%s\n", $code, $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
+			$status = $e->getCode() !== 0 ? $e->getCode() : 0;
+			$error = printf("Exception(%d): %s\nFile: %s(Line %d)\nTrace:\n%s\n", $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
 
 			return $this->showError($error, $status);
 		}
@@ -114,66 +125,98 @@ class Console
 	 * @param  [type] $handler [description]
 	 * @return [type]          [description]
 	 */
-	public function runHandler($command, $handler)
+	public function hanedle(String $command, $handler)
 	{
-		if(method_exists($handler, 'execute')){
-			$handler->setConsole($this);
-			return $handler->execute();
+		if($handler instanceof Closure){
+			// 匿名函数
+			return call_user_func_array($handler, [$this->input, $this->output]);
+		}
+		elseif(class_exists($handler) && is_subclass_of($handler, "\\Mon\\console\\Command")){
+			$instance = new $handler();
+			return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
 		}
 
 		throw new CliException('The execute method is not found in the command: '.$command);
 	}
 
 	/**
-	 * 处理异常
+	 * 注册指令
 	 *
-	 * @param  [type] $e [description]
-	 * @return [type]    [description]
+	 * @param [type] $command [description]
+	 * @param String $handle  [description]
 	 */
-	public function handlerException($e)
+	public function addCommand(String $command, $handle, $option = [])
 	{
-		$code = $e->getCode() !== 0 ? $e->getCode() : 0;
-        return $code;
+		$parse = $this->parseOption($option);
+
+		return $this->recordMessgae($command, $parse['desc'], $parse['alias'])
+					->recordHandle($command, $handle, $parse['alias']);
 	}
 
 	/**
-	 * 注册指令
-	 * 
-	 * @param string 		 $command 	指令对象名称
-	 * @param method 		 $handler 	指令回调
-	 * @param string 		 $desc    	指令描述
+	 * 记录指令
+	 *
+	 * @param  String      $command [description]
+	 * @param  [type]      $handle  [description]
+	 * @param  String|null $alias   [description]
+	 * @return [type]               [description]
 	 */
-	public function addCommand($command)
+	protected function recordHandle(String $command, $handle, String $alias = null)
 	{
-		if( is_string($command) && class_exists($command) && 
-			is_subclass_of($command, "\\Mon\\FCli\\Command"))
-		{
-			$handler = new $command();
-			$name = $handler->getName();
-			$desc = $handler->getDesc();
+		$this->commands[$command] = $handle;
+		if(!is_null($alias)){
+			$alias = ($alias[0] == '-') ? $alias : '-'.$alias;
+			$this->commands[$alias] = $handle;
+		}
 
-			// 判断指令是否已存在
-			if(isset($this->commands[$name]) || isset($this->commands[$name])){
-	        	throw new InvalidArgumentException('Command Exists');
-	        }
+		return $this;
+	}
 
-	        $this->commands[$name] = $handler;
-        	$this->messages[$name] = trim($desc);
+	/**
+	 * 记录指令信息
+	 *
+	 * @param  String      $command [description]
+	 * @param  String|null $desc    [description]
+	 * @param  String|null $alias   [description]
+	 * @return [type]               [description]
+	 */
+	protected function recordMessgae(String $command, String $desc = null, String $alias = null)
+	{
+		if(is_null($alias)){
+			$this->messages[$command] = $desc;
 		}
 		else{
-			// 参数错误
-			throw new InvalidArgumentException('Invalid arguments');
+			$this->messages[$command] = [
+				'desc'	=> $desc,
+				'alias'	=> $alias
+			];
 		}
+
+		return $this;
 	}
 
 	/**
-	 * 获取input实例
+	 * 解析准备注册的指令的其他信息
 	 *
-	 * @return [type] [description]
+	 * @param  [type] $command [description]
+	 * @return [type]          [description]
 	 */
-	public function getInput()
+	protected function parseOption($option):Array
 	{
-		return $this->input;
+		$parse = [];
+		if(is_array($option)){
+			$parse['desc'] = $option['desc'] ?? null;
+			$parse['alias'] = $option['alias'] ?? null;
+		}
+		elseif(is_string($option)){
+			$parse['desc'] = $option;
+			$parse['alias'] = null;
+		}
+		else{
+			throw new InvalidArgumentException('Command option invalid arguments.');
+		}
+
+		return $parse;
 	}
 
 	/**
@@ -183,7 +226,7 @@ class Console
 	 */
 	public function showVersion()
 	{
-		echo "Mon-Console version " . self::VERSION . PHP_EOL;
+		$status = $this->output->write("Mon-Console version " . self::VERSION);
         exit(0);
 	}
 
@@ -194,8 +237,23 @@ class Console
 	 */
 	public function showHelp()
 	{
-		$help = $this->getHelp();
-        echo Style::color($help) . PHP_EOL;
+		$this->output->write("\nWelcome to Mon-Console Application.\n");
+		$columns = ['command', 'alias', 'desc'];
+		$data = [];
+		foreach($this->messages as $command => $option)
+		{
+			if(is_array($option)){
+            	$desc = $option['desc'] ?: 'No description for the command';
+            	$alias = '-' . $option['alias'];
+            }
+            else{
+            	$desc = $option ?: 'No description for the command';
+            	$alias = '';
+            }
+			$data[] = [$command, $alias, $desc];
+		}
+
+		$this->output->table($data, 'Mon-console Help', ['columns' => $columns]);
         exit(0);
 	}
 
@@ -207,12 +265,18 @@ class Console
 	public function getHelp()
 	{
 		$commandWidth = 12;
-        $help = "Welcome to Mon-Console Application.\n\n<comment>Available Commands:</comment>\n";
-        foreach($this->messages as $command => $desc)
+        foreach($this->messages as $command => $option)
         {
             $command = str_pad($command, $commandWidth, ' ');
-            $desc = $desc ?: 'No description for the command';
-            $help .= "  {$command}   {$desc}\n";
+            if(is_array($option)){
+            	$desc = $option['desc'] ?: 'No description for the command';
+            	$alias = str_pad($option['alias'] ?: '', $commandWidth, ' ');
+            }
+            else{
+            	$desc = $option ?: 'No description for the command';
+            	$alias = str_pad('', $commandWidth, ' ');
+            }
+            $help .= "  {$command}   {$alias}   {$desc}\n";
         }
 
         return $help;
@@ -227,11 +291,9 @@ class Console
 	public function showError($error = '', $ststus = 0)
 	{
 		if($error){
-            echo Style::color("<red>[ERROR]</red>: {$error}\n\n");
+            $this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));
         }
 
-        $help = $this->getHelp();
-        echo Style::color($help) . PHP_EOL;
-        exit($ststus);
+       	return $this->showHelp();
 	}
 }

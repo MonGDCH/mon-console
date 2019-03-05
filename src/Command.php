@@ -1,7 +1,8 @@
 <?php
- namespace Mon\FCli;
+ namespace Mon\console;
 
-use Mon\FCli\Console;
+use Mon\console\Input;
+use Mon\console\Output;
 
 /**
  * 指令基类
@@ -12,61 +13,14 @@ use Mon\FCli\Console;
 abstract class Command
 {
     /**
-     * 指令名称
-     *
-     * @var string
+     * 构造方法
      */
-    abstract protected $name = 'Test';
-
-    /**
-     * 指令描述
-     *
-     * @var string
-     */
-    abstract protected $desc = 'This is User Command';
-
-    /**
-     * 控制台实例
-     *
-     * @var [type]
-     */
-    protected $console;
-
+    public function __construct(){}
 
  	/**
  	 * 执行指令的接口方法
  	 *
  	 * @return [type] [description]
  	 */
- 	abstract public function execute();
-
-    /**
-     * 设置控制台
-     *
-     * @param [type] $console [description]
-     */
-    final public function setConsole(Console $console)
-    {
-        $this->console = $console;
-    }
-
-    /**
-     * 获取指令描述
-     *
-     * @return [type] [description]
-     */
-    final public function getDesc()
-    {
-        return $this->desc;
-    }
-
-    /**
-     * 获取指令名称
-     *
-     * @return [type] [description]
-     */
-    final public function getName()
-    {
-        return $this->name;
-    }
+ 	abstract public function execute(Input $input, Output $output);
 }

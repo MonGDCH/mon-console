@@ -1,9 +1,10 @@
 <?php
-namespace Mon\FCli\input;
+namespace Mon\console;
 
 use STDIN;
 use STDOUT;
-use Mon\FCli\util\Parse;
+use Mon\console\libs\Parse;
+use Mon\console\libs\Password;
 
 /**
  * 输入操作类
@@ -19,13 +20,6 @@ class Input
 	 * @var null
 	 */
 	protected static $instance = null;
-
-	/**
-	 * 输入流句柄
-	 *
-	 * @var [type]
-	 */
-	protected $stream = STDIN;
 
 	/**
 	 * 原始argv数据
@@ -88,10 +82,10 @@ class Input
 	 * @see __construct
 	 * @return static
 	 */
-	public static function instance($argv = null, $parse = true)
+	public static function instance($argv = null)
 	{
 	    if(is_null(self::$instance)){
-	        self::$instance = new self($argv, $parse);
+	        self::$instance = new self($argv);
 	    }
 	    return self::$instance;
 	}
@@ -100,9 +94,8 @@ class Input
 	 * 构造方法
 	 *
 	 * @param [type]  $argv  请求参数
-	 * @param boolean $parse 是否解析输入
 	 */
-	protected function __construct($argv = null, $parse = true)
+	protected function __construct($argv = null)
 	{
 		if(is_null($argv)){
 			$argv = $_SERVER['argv'];
@@ -113,10 +106,8 @@ class Input
 		$this->fullScript = implode(' ', $argv);
 		$this->script = array_shift($argv);
 
-		if($parse){
-			list($this->args, $this->sOpts, $this->lOpts) = Parse::parseArgv($argv);
-			$this->command = isset($this->args[0]) ? array_shift($this->args) : null;
-		}
+		// 解析参数
+		list($this->command, $this->args, $this->sOpts, $this->lOpts) = Parse::parseArgv($argv);
 	}
 
 	/**
@@ -126,13 +117,24 @@ class Input
      * @param  bool $nl true 会添加换行符 false 原样输出，不添加换行符
      * @return string
      */
-    public function read($question = null, $nl = false)
+    public function read($question = null, $nl = false): string
     {
         if ($question) {
             fwrite(STDOUT, $question . ($nl ? "\n" : ''));
         }
 
-        return trim(fgets($this->stream));
+        return trim(fgets(STDIN));
+    }
+
+    /**
+     * 获取用户输入密码
+     *
+     * @param  string $tips [description]
+     * @return [type]       [description]
+     */
+    public function password($tips = 'Please Enter Password:')
+    {
+    	return Password::interaction($tips);
     }
 
 	/**
@@ -140,7 +142,7 @@ class Input
 	 *
 	 * @return [type] [description]
 	 */
-	public function getPwd()
+	public function getPwd(): string
 	{
 		if(!$this->pwd){
 			$this->pwd = getcwd();
@@ -172,6 +174,8 @@ class Input
 	public function setArgs(array $val, $replace = false)
 	{
 		$this->args = $replace ? $val : array_merge($this->args, $val);
+
+		return $this;
 	}
 
 	/**
@@ -197,6 +201,8 @@ class Input
 	public function setSopt(array $val, $replace = false)
 	{
 		$this->sOpts = $replace ? $val : array_merge($this->sOpts, $val);
+
+		return $this;
 	}
 
 	/**
@@ -229,7 +235,7 @@ class Input
 	 *
 	 * @return [type] [description]
 	 */
-	public function getCommand()
+	public function getCommand($argv = null)
 	{
 		return $this->command;
 	}
@@ -242,5 +248,7 @@ class Input
 	public function setCommand($command)
 	{
 		$this->command = $command;
+
+		return $this;
 	}
 }

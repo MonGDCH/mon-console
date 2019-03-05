@@ -1,5 +1,5 @@
 <?php
-namespace Mon\FCli;
+namespace Mon\console;
 
 use Exception;
 /**
