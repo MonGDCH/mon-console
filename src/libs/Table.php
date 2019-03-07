@@ -84,7 +84,6 @@ class Table
             if($rowIndex === 0){
                 $head = $tableHead ?: array_keys($row);
                 $info['columnCount'] = count($row);
-
                 foreach($head as $index => $name)
                 {
                     if(is_string($name)){

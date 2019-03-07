@@ -254,7 +254,7 @@ class Console
 			$data[] = [$command, $alias, $desc];
 		}
 
-		$this->output->table($data, 'Mon-console Help', ['columns' => $columns]);
+		$this->output->table($data, 'Mon-console Help', $columns);
         exit(0);
 	}
 
