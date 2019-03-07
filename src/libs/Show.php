@@ -1,6 +1,7 @@
 <?php
 namespace Mon\console\libs;
 
+use STDOUT;
 use Mon\console\libs\Util;
 use Mon\console\libs\Style;
 use Mon\console\libs\StrBuffer;
@@ -44,10 +45,9 @@ class Show
             $messages .= $nl ? PHP_EOL : '';
         }
 
-        $stream = \STDOUT;
-        fwrite($stream, $messages);
+        fwrite(STDOUT, $messages);
         if ($flush) {
-            fflush($stream);
+            fflush(STDOUT);
         }
 
         if($quit !== false){
@@ -119,16 +119,14 @@ class Show
      * @param string $title
      * @return int|string
      */
-    public static function list($data, string $title = null, array $opts = [])
+    public static function list($data, string $title = null, bool $sequence = false, array $opts = [])
     {
         $string = '';
         $opts = array_merge([
             'leftChar' => ' - ',
-            // 'sepChar' => '  ',
             'keyStyle' => 'info',
             'keyMinWidth' => 8,
             'titleStyle' => 'comment',
-            'returned' => false,
             'lastNewline' => true,
         ], $opts);
 
@@ -137,11 +135,7 @@ class Show
             $string .= Util::wrapTag($title, $opts['titleStyle']) . PHP_EOL;
         }
 
-        $string .= Util::spliceKeyValue((array)$data, $opts);
-
-        if($opts['returned']){
-            return $string;
-        }
+        $string .= Util::spliceKeyValue((array)$data, $opts, $sequence);
 
         return self::write($string, $opts['lastNewline']);
     }

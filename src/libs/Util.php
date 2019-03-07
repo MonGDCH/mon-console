@@ -159,7 +159,7 @@ class Util
      * @param  array $opts
      * @return string
      */
-    public static function spliceKeyValue(array $data, array $opts = []): string
+    public static function spliceKeyValue(array $data, array $opts = [], bool $sequence = false): string
     {
         $text = '';
         $opts = array_merge([
@@ -182,18 +182,24 @@ class Util
 
         $keyStyle = trim($opts['keyStyle']);
 
+        $i = 1;
         foreach($data as $key => $value)
         {
             $hasKey = !is_int($key);
-            $text .= $opts['leftChar'];
+
+            if($sequence == true){
+                $text .= ' ' . $i . '. ';
+            }
+            else{
+                $text .= $opts['leftChar'];
+            }
 
             if($hasKey && $opts['keyMaxWidth']){
                 $key = str_pad($key, $opts['keyMaxWidth'], ' ');
                 $text .= self::wrapTag($key, $keyStyle) . $opts['sepChar'];
             }
 
-            if(is_array($value))
-            {
+            if(is_array($value)){
                 $temp = '';
 
                 foreach($value as $k => $val)
@@ -221,6 +227,7 @@ class Util
 
             $value = $hasKey && $opts['ucFirst'] ? ucfirst($value) : $value;
             $text .= self::wrapTag($value, $opts['valStyle']) . "\n";
+            $i++;
         }
 
         return $text;

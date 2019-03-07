@@ -113,6 +113,7 @@ class Console
 
 			return $this->showError($error, $status);
 		}
+
 		if($exit){
 			exit((int)$status);
 		}

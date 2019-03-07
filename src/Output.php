@@ -1,6 +1,7 @@
 <?php
 namespace Mon\console;
 
+use STDERR;
 use Mon\console\libs\Show;
 use Mon\console\libs\Table;
 
@@ -24,7 +25,7 @@ class Output
      *
      * Property errorStream.
      */
-    protected $errorStream = \STDERR;
+    protected $errorStream = STDERR;
 
     /**
      * 获取单例
@@ -101,11 +102,11 @@ class Output
      * @param  boolean $nl   [description]
      * @return [type]        [description]
      */
-    public function error($text = '', $nl = true): self
+    public function error($text = '', $nl = true): int
     {
         fwrite($this->errorStream, $text . ($nl ? "\n" : null));
 
-        return $this;
+        return 0;
     }
 
     /**
@@ -147,30 +148,34 @@ class Output
     /**
      * 列表
      *
-     * @param  [type]      $data  [description]
-     * @param  string|null $title [description]
-     * @param  array       $opts  [description]
-     * @return [type]             [description]
+     * @param  [type]       $data     一维数组
+     * @param  string|null  $title    标题
+     * @param  bool|boolean $sequence 是否是有序列表
+     * @param  array        $opts     额外配置参数
+     * @return [type]                 [description]
      */
-    public function list($data, string $title = null, array $opts = []): int
+    public function list($data, string $title = null, bool $sequence = false, array $opts = []): int
     {
-        return Show::list($data, $title, $opts);
+        return Show::list($data, $title, $sequence, $opts);
     }
 
     /**
      * 表格
      *
-     * @return [type] [description]
+     * @param  array  $data  二维数组
+     * @param  string $title 表标题
+     * @param  array  $opts  表列名称
+     * @return [type]        [description]
      */
-    public function table(array $data, string $title = 'Data Table', array $opts = []): int
+    public function table(array $data, string $title = 'Data Table', array $columns = []): int
     {
-        return Table::create($data, $title, $opts);
+        return Table::create($data, $title, ['columns' => $columns]);
     }
 
     /**
      * json输出
      */
-    public function json($data, $echo = true, int $flags = JSON_UNESCAPED_UNICODE)
+    public function json($data, bool $echo = true, int $flags = JSON_UNESCAPED_UNICODE)
     {
         $string = json_encode($data, $flags);
 
