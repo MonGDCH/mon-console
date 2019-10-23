@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console;
 
 use STDIN;
@@ -13,7 +14,7 @@ use Mon\console\libs\Password;
  * @version v1.0
  */
 class Input
-{	
+{
 	/**
 	 * 单例实体
 	 *
@@ -84,10 +85,10 @@ class Input
 	 */
 	public static function instance($argv = null)
 	{
-	    if(is_null(self::$instance)){
-	        self::$instance = new self($argv);
-	    }
-	    return self::$instance;
+		if (is_null(self::$instance)) {
+			self::$instance = new self($argv);
+		}
+		return self::$instance;
 	}
 
 	/**
@@ -97,7 +98,7 @@ class Input
 	 */
 	protected function __construct($argv = null)
 	{
-		if(is_null($argv)){
+		if (is_null($argv)) {
 			$argv = $_SERVER['argv'];
 		}
 
@@ -111,40 +112,40 @@ class Input
 	}
 
 	/**
-     * 读取输入信息
-     *
-     * @param  string $question 若不为空，则先输出文本消息
-     * @param  bool $nl true 会添加换行符 false 原样输出，不添加换行符
-     * @return string
-     */
-    public function read($question = null, $nl = false): string
-    {
-        if ($question) {
-            fwrite(STDOUT, $question . ($nl ? "\n" : ''));
-        }
+	 * 读取输入信息
+	 *
+	 * @param  string $question 若不为空，则先输出文本消息
+	 * @param  bool $nl true 会添加换行符 false 原样输出，不添加换行符
+	 * @return string
+	 */
+	public function read($question = null, $nl = false)
+	{
+		if ($question) {
+			fwrite(STDOUT, $question . ($nl ? "\n" : ''));
+		}
 
-        return trim(fgets(STDIN));
-    }
+		return trim(fgets(STDIN));
+	}
 
-    /**
-     * 获取用户输入密码
-     *
-     * @param  string $tips [description]
-     * @return [type]       [description]
-     */
-    public function password($tips = 'Please Enter Password:')
-    {
-    	return Password::interaction($tips);
-    }
+	/**
+	 * 获取用户输入密码
+	 *
+	 * @param  string $tips [description]
+	 * @return [type]       [description]
+	 */
+	public function password($tips = 'Please Enter Password:')
+	{
+		return Password::interaction($tips);
+	}
 
 	/**
 	 * 获取路径
 	 *
 	 * @return [type] [description]
 	 */
-	public function getPwd(): string
+	public function getPwd()
 	{
-		if(!$this->pwd){
+		if (!$this->pwd) {
 			$this->pwd = getcwd();
 		}
 
@@ -158,10 +159,10 @@ class Input
 	 */
 	public function getArgs($key = null, $defalue = null)
 	{
-		if(is_null($key)){
+		if (is_null($key)) {
 			return $this->args;
 		}
-		
+
 		return isset($this->args[$key]) ? $this->args[$key] : $defalue;
 	}
 
@@ -185,10 +186,10 @@ class Input
 	 */
 	public function getSopt($key = null, $defalue = null)
 	{
-		if(is_null($key)){
+		if (is_null($key)) {
 			return $this->sOpts;
 		}
-		
+
 		return isset($this->sOpts[$key]) ? $this->sOpts[$key] : $defalue;
 	}
 
@@ -212,10 +213,10 @@ class Input
 	 */
 	public function getlopt($key = null, $defalue = null)
 	{
-		if(is_null($key)){
+		if (is_null($key)) {
 			return $this->lOpts;
 		}
-		
+
 		return isset($this->lOpts[$key]) ? $this->lOpts[$key] : $defalue;
 	}
 
@@ -235,7 +236,7 @@ class Input
 	 *
 	 * @return [type] [description]
 	 */
-	public function getCommand($argv = null)
+	public function getCommand()
 	{
 		return $this->command;
 	}

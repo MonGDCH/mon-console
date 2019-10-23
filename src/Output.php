@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console;
 
 use STDERR;
@@ -35,7 +36,7 @@ class Output
      */
     public static function instance()
     {
-        if(is_null(self::$instance)){
+        if (is_null(self::$instance)) {
             self::$instance = new self();
         }
         return self::$instance;
@@ -46,7 +47,8 @@ class Output
      *
      * @param [type] $stream [description]
      */
-    public function __construct(){}
+    public function __construct()
+    { }
 
     /**
      * 开启Buffer
@@ -71,13 +73,13 @@ class Output
     /**
      * 关闭Buffer
      *
-     * @param  bool|boolean $flush [description]
+     * @param  boolean $flush [description]
      * @param  boolean      $nl    [description]
      * @param  boolean      $quit  [description]
      * @param  array        $opts  [description]
      * @return [type]              [description]
      */
-    public function stopBuffer(bool $flush = true, $nl = false, $quit = false, array $opts = [])
+    public function stopBuffer($flush = true, $nl = false, $quit = false, array $opts = [])
     {
         Show::stopBuffer($flush, $nl, $quit, $opts);
     }
@@ -85,12 +87,12 @@ class Output
     /**
      * 输出Buffer
      *
-     * @param  bool|boolean $nl   [description]
+     * @param  boolean $nl   [description]
      * @param  boolean      $quit [description]
      * @param  array        $opts [description]
      * @return [type]             [description]
      */
-    public function flush(bool $nl = false, $quit = false, array $opts = [])
+    public function flush($nl = false, $quit = false, array $opts = [])
     {
         $this->stopBuffer(true, $nl, $quit, $opts);
     }
@@ -102,7 +104,7 @@ class Output
      * @param  boolean $nl   [description]
      * @return [type]        [description]
      */
-    public function error($text = '', $nl = true): int
+    public function error($text = '', $nl = true)
     {
         fwrite($this->errorStream, $text . ($nl ? "\n" : null));
 
@@ -117,7 +119,7 @@ class Output
      * @param  boolean $quit     [description]
      * @return [type]            [description]
      */
-    public function write($messages, $nl = true, $quit = false): int
+    public function write($messages, $nl = true, $quit = false)
     {
         return Show::write($messages, $nl, $quit, true);
     }
@@ -127,7 +129,7 @@ class Output
      *
      * @see Show::block()
      */
-    public function block($messages, $type = 'INFO', $quit = false): int
+    public function block($messages, $type = 'INFO', $quit = false)
     {
         return Show::block($messages, $type, $quit);
     }
@@ -140,7 +142,7 @@ class Output
      * @param int $width
      * @return int
      */
-    public function splitLine(string $title = null, string $char = '-', int $width = 0): int
+    public function splitLine($title = null, $char = '-', $width = 0)
     {
         return Show::splitLine($title, $char, $width);
     }
@@ -150,13 +152,13 @@ class Output
      *
      * @param  [type]       $data     一维数组
      * @param  string|null  $title    标题
-     * @param  bool|boolean $sequence 是否是有序列表
+     * @param  boolean $sequence 是否是有序列表
      * @param  array        $opts     额外配置参数
      * @return [type]                 [description]
      */
-    public function list($data, string $title = null, bool $sequence = false, array $opts = []): int
+    public function dataList($data, $title = null, $sequence = false, array $opts = [])
     {
-        return Show::list($data, $title, $sequence, $opts);
+        return Show::dataList($data, $title, $sequence, $opts);
     }
 
     /**
@@ -167,7 +169,7 @@ class Output
      * @param  array  $opts  表列名称
      * @return [type]        [description]
      */
-    public function table(array $data, string $title = 'Data Table', array $columns = []): int
+    public function table(array $data, $title = 'Data Table', array $columns = [])
     {
         return Table::create($data, $title, ['columns' => $columns]);
     }
@@ -175,7 +177,7 @@ class Output
     /**
      * json输出
      */
-    public function json($data, bool $echo = true, int $flags = JSON_UNESCAPED_UNICODE)
+    public function json($data, $echo = true, $flags = JSON_UNESCAPED_UNICODE)
     {
         $string = json_encode($data, $flags);
 
@@ -192,7 +194,7 @@ class Output
      * @param  [type] $args [description]
      * @return [type]       [description]
      */
-    public function dump(...$args): int
+    public function dump(...$args)
     {
         ob_start();
         var_dump(...$args);

@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console\libs;
 
 /**
@@ -25,7 +26,7 @@ class Util
      *
      * @return bool
      */
-    public static function shIsAvailable(): bool
+    public static function shIsAvailable()
     {
         $checkCmd = "sh -c 'echo OK'";
 
@@ -49,38 +50,37 @@ class Util
      * list($width, $height) = Self::getScreenSize();
      * ```
      */
-    public static function getScreenSize(bool $refresh = false)
+    public static function getScreenSize($refresh = false)
     {
         static $size;
-        if($size !== null && !$refresh){
+        if ($size !== null && !$refresh) {
             return $size;
         }
 
-        if(self::shIsAvailable()){
-            $stty = [];
-
-            if(exec('stty -a 2>&1', $stty) && preg_match('/rows\s+(\d+);\s*columns\s+(\d+);/mi', implode(' ', $stty), $matches)){
-                return ($size = [$matches[2], $matches[1]]);
-            }
-
-            if (($width = (int)exec('tput cols 2>&1')) > 0 && ($height = (int)exec('tput lines 2>&1')) > 0) {
-                return ($size = [$width, $height]);
-            }
-
-            if (($width = (int)getenv('COLUMNS')) > 0 && ($height = (int)getenv('LINES')) > 0) {
-                return ($size = [$width, $height]);
-            }
-        }
-
-        if(self::isWindows()){
+        if (self::isWindows()) {
             $output = [];
             exec('mode con', $output);
 
-            if(isset($output[1]) && strpos($output[1], 'CON') !== false){
+            if (isset($output[1]) && strpos($output[1], 'CON') !== false) {
                 return ($size = [
-                    (int)preg_replace('~\D~', '', $output[3]),
-                    (int)preg_replace('~\D~', '', $output[4])
+                    (int) preg_replace('~\D~', '', $output[3]),
+                    (int) preg_replace('~\D~', '', $output[4])
                 ]);
+            }
+        }
+
+        if (self::shIsAvailable()) {
+            $stty = [];
+            if (exec('stty -a 2>&1', $stty) && preg_match('/rows\s+(\d+);\s*columns\s+(\d+);/mi', implode(' ', $stty), $matches)) {
+                return ($size = [$matches[2], $matches[1]]);
+            }
+
+            if (($width = (int) exec('tput cols 2>&1')) > 0 && ($height = (int) exec('tput lines 2>&1')) > 0) {
+                return ($size = [$width, $height]);
+            }
+
+            if (($width = (int) getenv('COLUMNS')) > 0 && ($height = (int) getenv('LINES')) > 0) {
+                return ($size = [$width, $height]);
             }
         }
 
@@ -94,13 +94,13 @@ class Util
      * @param string $tag
      * @return string
      */
-    public static function wrapTag(string $string, string $tag): string
+    public static function wrapTag($string, $tag)
     {
-        if(!$string){
+        if (!$string) {
             return '';
         }
 
-        if(!$tag){
+        if (!$tag) {
             return $string;
         }
 
@@ -110,12 +110,12 @@ class Util
     /**
      * 获取字符串长度
      *
-     * @param $string
+     * @param string $string
      * @return int
      */
-    public static function strLen(string $string): int
+    public static function strLen($string)
     {
-        if(false === $encoding = mb_detect_encoding($string, null, true)){
+        if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return strlen($string);
         }
 
@@ -133,13 +133,12 @@ class Util
      * @param bool $expectInt
      * @return int
      */
-    public static function getKeyMaxWidth(array $data, bool $expectInt = false): int
+    public static function getKeyMaxWidth(array $data, $expectInt = false)
     {
         $keyMaxWidth = 0;
 
-        foreach($data as $key => $value)
-        {
-            if(!$expectInt || !is_numeric($key)){
+        foreach ($data as $key => $value) {
+            if (!$expectInt || !is_numeric($key)) {
                 $width = mb_strlen($key, 'UTF-8');
                 $keyMaxWidth = $width > $keyMaxWidth ? $width : $keyMaxWidth;
             }
@@ -159,7 +158,7 @@ class Util
      * @param  array $opts
      * @return string
      */
-    public static function spliceKeyValue(array $data, array $opts = [], bool $sequence = false): string
+    public static function spliceKeyValue(array $data, array $opts = [], $sequence = false)
     {
         $text = '';
         $opts = array_merge([
@@ -172,56 +171,50 @@ class Util
             'ucFirst' => true,
         ], $opts);
 
-        if(!is_numeric($opts['keyMaxWidth'])){
+        if (!is_numeric($opts['keyMaxWidth'])) {
             $opts['keyMaxWidth'] = self::getKeyMaxWidth($data);
         }
 
-        if((int)$opts['keyMinWidth'] > $opts['keyMaxWidth']){
+        if ((int) $opts['keyMinWidth'] > $opts['keyMaxWidth']) {
             $opts['keyMaxWidth'] = $opts['keyMinWidth'];
         }
 
         $keyStyle = trim($opts['keyStyle']);
 
         $i = 1;
-        foreach($data as $key => $value)
-        {
+        foreach ($data as $key => $value) {
             $hasKey = !is_int($key);
 
-            if($sequence == true){
+            if ($sequence == true) {
                 $text .= ' ' . $i . '. ';
-            }
-            else{
+            } else {
                 $text .= $opts['leftChar'];
             }
 
-            if($hasKey && $opts['keyMaxWidth']){
+            if ($hasKey && $opts['keyMaxWidth']) {
                 $key = str_pad($key, $opts['keyMaxWidth'], ' ');
                 $text .= self::wrapTag($key, $keyStyle) . $opts['sepChar'];
             }
 
-            if(is_array($value)){
+            if (is_array($value)) {
                 $temp = '';
 
-                foreach($value as $k => $val)
-                {
-                    if(is_bool($val)){
+                foreach ($value as $k => $val) {
+                    if (is_bool($val)) {
                         $val = $val ? '(True)' : '(False)';
-                    }
-                    else{
-                        $val = is_scalar($val) ? (string)$val : gettype($val);
+                    } else {
+                        $val = is_scalar($val) ? (string) $val : gettype($val);
                     }
 
                     $temp .= (!is_numeric($k) ? "$k: " : '') . "$val, ";
                 }
 
                 $value = rtrim($temp, ' ,');
-            }
-            else{
-                if(is_bool($value)){
+            } else {
+                if (is_bool($value)) {
                     $value = $value ? '(True)' : '(False)';
-                }
-                else{
-                    $value = (string)$value;
+                } else {
+                    $value = (string) $value;
                 }
             }
 
@@ -241,43 +234,39 @@ class Util
      * @param  string|null  $cwd          [description]
      * @return [type]                     [description]
      */
-    public static function execute(string $command, bool $returnStatus = true, string $cwd = null)
+    public static function execute($command, $returnStatus = true, $cwd = null)
     {
         $return_var = 1;
 
-        if($cwd){
+        if ($cwd) {
             // 切换目录
             chdir($cwd);
         }
 
-        if(function_exists('system')){
+        if (function_exists('system')) {
             ob_start();
             system($command, $return_var);
             $output = ob_get_contents();
             ob_end_clean();
-        }
-        elseif(function_exists('passthru')){
+        } elseif (function_exists('passthru')) {
             ob_start();
             passthru($command, $return_var);
             $output = ob_get_contents();
             ob_end_clean();
-        }
-        else{
-            if(function_exists('exec')){
+        } else {
+            if (function_exists('exec')) {
                 exec($command, $output, $return_var);
                 $output = implode("\n", $output);
-            }
-            else{
-                if(function_exists('shell_exec')){
+            } else {
+                if (function_exists('shell_exec')) {
                     $output = shell_exec($command);
-                }
-                else{
+                } else {
                     $output = 'Command execution not possible on this system';
                     $return_var = 0;
                 }
             }
         }
-        if($returnStatus){
+        if ($returnStatus) {
             return ['output' => trim($output), 'status' => $return_var];
         }
 

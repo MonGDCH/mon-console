@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console\libs;
 
 use Mon\console\libs\Util;
@@ -42,9 +43,9 @@ class Table
      * ```
      * @return int
      */
-    public static function create(array $data, string $title = 'Data Table', array $opts = []): int
+    public static function create(array $data, $title = 'Data Table', array $opts = [])
     {
-        if(!$data){
+        if (!$data) {
             return -404;
         }
 
@@ -79,14 +80,12 @@ class Table
         ];
 
         // 解析表格数据
-        foreach($data as $row)
-        {
-            if($rowIndex === 0){
+        foreach ($data as $row) {
+            if ($rowIndex === 0) {
                 $head = $tableHead ?: array_keys($row);
                 $info['columnCount'] = count($row);
-                foreach($head as $index => $name)
-                {
-                    if(is_string($name)){
+                foreach ($head as $index => $name) {
+                    if (is_string($name)) {
                         $hasHead = true;
                     }
 
@@ -96,16 +95,14 @@ class Table
 
             $colIndex = 0;
 
-            foreach((array)$row as $value)
-            {
-                if(isset($info['columnMaxWidth'][$colIndex])){
+            foreach ((array) $row as $value) {
+                if (isset($info['columnMaxWidth'][$colIndex])) {
                     $colWidth = mb_strlen($value, 'UTF-8');
 
-                    if($colWidth > $info['columnMaxWidth'][$colIndex]){
+                    if ($colWidth > $info['columnMaxWidth'][$colIndex]) {
                         $info['columnMaxWidth'][$colIndex] = $colWidth;
                     }
-                }
-                else{
+                } else {
                     $info['columnMaxWidth'][$colIndex] = mb_strlen($value, 'UTF-8');
                 }
 
@@ -118,7 +115,7 @@ class Table
         $tableWidth = $info['tableWidth'] = array_sum($info['columnMaxWidth']);
         $columnCount = $info['columnCount'];
 
-        if($title){
+        if ($title) {
             $tStyle = $opts['titleStyle'] ?: 'bold';
             $title = ucwords(trim($title));
             $titleLength = mb_strlen($title, 'UTF-8');
@@ -128,18 +125,16 @@ class Table
 
         $border = $leftIndent . str_pad($rowBorderChar, $tableWidth + ($columnCount * 3) + 2, $rowBorderChar);
 
-        if($showBorder){
+        if ($showBorder) {
             $buf->write($border . "\n");
-        }
-        else{
+        } else {
             $colBorderChar = '';
         }
 
-        if($hasHead){
+        if ($hasHead) {
             $headStr = "{$leftIndent}{$colBorderChar} ";
 
-            foreach($head as $index => $name)
-            {
+            foreach ($head as $index => $name) {
                 $colMaxWidth = $info['columnMaxWidth'][$index];
                 $name = str_pad($name, $colMaxWidth, ' ');
                 $name = Util::wrapTag($name, $opts['headStyle']);
@@ -148,7 +143,7 @@ class Table
 
             $buf->write($headStr . "\n");
 
-            if($headBorderChar = $opts['headBorderChar']){
+            if ($headBorderChar = $opts['headBorderChar']) {
                 $headBorder = $leftIndent . str_pad($headBorderChar, $tableWidth + ($columnCount * 3) + 2, $headBorderChar);
                 $buf->write($headBorder . "\n");
             }
@@ -156,13 +151,11 @@ class Table
 
         $rowIndex = 0;
 
-        foreach($data as $row)
-        {
+        foreach ($data as $row) {
             $colIndex = 0;
             $rowStr = "  $colBorderChar ";
 
-            foreach((array)$row as $value)
-            {
+            foreach ((array) $row as $value) {
                 $colMaxWidth = $info['columnMaxWidth'][$colIndex];
                 $value = str_pad($value, $colMaxWidth, ' ');
                 $value = Util::wrapTag($value, $opts['bodyStyle']);
@@ -174,7 +167,7 @@ class Table
             $rowIndex++;
         }
 
-        if($showBorder){
+        if ($showBorder) {
             $buf->write($border . "\n");
         }
 

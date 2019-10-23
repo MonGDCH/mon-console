@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console\libs;
 
 use STDOUT;
@@ -8,10 +9,18 @@ use Mon\console\libs\StrBuffer;
 
 class Show
 {
-    /** @var string */
+    /**
+     * 数据buffer块
+     *
+     * @var string
+     */
     private static $buffer;
 
-    /** @var bool */
+    /**
+     * 启用数据buffer
+     *
+     * @var boolean
+     */
     private static $buffering = false;
 
     /**
@@ -23,25 +32,24 @@ class Show
      * @param bool $flush 刷新流数据
      * @return int
      */
-    public static function write($messages, $nl = true, $quit = false, $flush = true): int
+    public static function write($messages, $nl = true, $quit = false, $flush = true)
     {
-        if(is_array($messages)){
+        if (is_array($messages)) {
             $messages = implode($nl ? PHP_EOL : '', $messages);
         }
 
-        $messages = Style::renderColor((string)$messages);
+        $messages = Style::renderColor((string) $messages);
 
-        if(self::isBuffering()){
+        if (self::isBuffering()) {
             self::$buffer .= $messages . ($nl ? PHP_EOL : '');
 
-            if(!$quit){
+            if (!$quit) {
                 return 0;
             }
 
             $messages = self::$buffer;
             self::clearBuffer();
-        }
-        else{
+        } else {
             $messages .= $nl ? PHP_EOL : '';
         }
 
@@ -50,8 +58,8 @@ class Show
             fflush(STDOUT);
         }
 
-        if($quit !== false){
-            $code = true === $quit ? 0 : (int)$quit;
+        if ($quit !== false) {
+            $code = true === $quit ? 0 : (int) $quit;
             exit($code);
         }
 
@@ -67,7 +75,7 @@ class Show
      * @param int|boolean $quit If is int, setting it is exit code.
      * @return int
      */
-    public static function block($messages, $type = 'INFO', $quit = false): int
+    public static function block($messages, $type = 'INFO', $quit = false)
     {
         $messages = is_array($messages) ? array_values($messages) : array($messages);
 
@@ -89,14 +97,14 @@ class Show
      * @param int $width
      * @return int
      */
-    public static function splitLine(string $title = null, string $char = '-', int $width = 0): int
+    public static function splitLine($title = null, $char = '-', $width = 0)
     {
         if ($width <= 0) {
             list($width,) = Util::getScreenSize();
             $width -= 2;
         }
 
-        if(!$title){
+        if (!$title) {
             return self::write(str_repeat($char, $width));
         }
 
@@ -119,7 +127,7 @@ class Show
      * @param string $title
      * @return int|string
      */
-    public static function list($data, string $title = null, bool $sequence = false, array $opts = [])
+    public static function dataList($data, $title = null, $sequence = false, array $opts = [])
     {
         $string = '';
         $opts = array_merge([
@@ -130,12 +138,12 @@ class Show
             'lastNewline' => true,
         ], $opts);
 
-        if($title){
+        if ($title) {
             $title = ucwords(trim($title));
             $string .= Util::wrapTag($title, $opts['titleStyle']) . PHP_EOL;
         }
 
-        $string .= Util::spliceKeyValue((array)$data, $opts, $sequence);
+        $string .= Util::spliceKeyValue((array) $data, $opts, $sequence);
 
         return self::write($string, $opts['lastNewline']);
     }
@@ -145,7 +153,7 @@ class Show
      * 
      * @return bool
      */
-    public static function isBuffering(): bool
+    public static function isBuffering()
     {
         return self::$buffering;
     }
@@ -179,7 +187,6 @@ class Show
         if ($flush && self::$buffer) {
             // flush to stream
             self::write(self::$buffer, $nl, $quit);
-
             // clear buffer
             self::$buffer = null;
         }

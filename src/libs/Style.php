@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console\libs;
 
 use STDOUT;
@@ -13,7 +14,7 @@ use STDOUT;
 class Style
 {
     const NORMAL = 0;
-    // Foreground color
+    // 前缀颜色
     const FG_BLACK = 30;
     const FG_RED = 31;
     const FG_GREEN = 32;
@@ -22,7 +23,7 @@ class Style
     const FG_CYAN = 36;
     const FG_WHITE = 37;
     const FG_DEFAULT = 39;
-    // extra Foreground color
+    // 扩展的前缀颜色
     const FG_DARK_GRAY = 90;
     const FG_LIGHT_RED = 91;
     const FG_LIGHT_GREEN = 92;
@@ -31,7 +32,7 @@ class Style
     const FG_LIGHT_MAGENTA = 95;
     const FG_LIGHT_CYAN = 96;
     const FG_WHITE_EXTRA = 97;
-    // Background color
+    // 背景颜色
     const BG_BLACK = 40;
     const BG_RED = 41;
     const BG_GREEN = 42;
@@ -40,7 +41,7 @@ class Style
     const BG_CYAN = 46;
     const BG_WHITE = 47;
     const BG_DEFAULT = 49;
-    // extra Background color
+    // 扩展的背景颜色
     const BG_DARK_GRAY = 100;
     const BG_LIGHT_RED = 101;
     const BG_LIGHT_GREEN = 102;
@@ -49,29 +50,29 @@ class Style
     const BG_LIGHT_MAGENTA = 105;
     const BG_LIGHT_CYAN = 106;
     const BG_WHITE_EXTRA = 107;
-    // color option
-    const BOLD = 1;
     // 加粗
-    const FUZZY = 2;
+    const BOLD = 1;
     // 模糊(不是所有的终端仿真器都支持)
-    const ITALIC = 3;
+    const FUZZY = 2;
     // 斜体(不是所有的终端仿真器都支持)
-    const UNDERSCORE = 4;
+    const ITALIC = 3;
     // 下划线
-    const BLINK = 5;
+    const UNDERSCORE = 4;
     // 闪烁
-    const REVERSE = 7;
+    const BLINK = 5;
     // 颠倒的 交换背景色与前景色
-    const CONCEALED = 8;
+    const REVERSE = 7;
     // 隐匿的
+    const CONCEALED = 8;
+
     /**
-     * Regex to match tags
+     * 正则规则
      * @var string
      */
     const COLOR_TAG = '/<([a-z=;]+)>(.*?)<\\/\\1>/s';
+
     /**
-     * some styles
-     * @var array
+     * 样式
      */
     const STYLES = [
         'yellow' => '1;33',
@@ -99,17 +100,12 @@ class Style
         'bold' => '1',
         'underscore' => '4',
         'reverse' => '7',
-        //
         'suc' => '1;32',
-        // same 'green' and 'bold'
         'success' => '1;32',
         'info' => '0;32',
-        // same 'green'
         'comment' => '0;33',
-        // same 'brown'
         'warning' => '0;30;43',
         'danger' => '0;31',
-        // same 'red'
         'error' => '30;41',
     ];
 
@@ -129,7 +125,7 @@ class Style
             return self::clearColor($text);
         }
         if (is_string($style)) {
-            $color = isset(self::STYLES[$style]) ? self::STYLES[$style] : '0';
+            $color = array_key_exists($style, self::STYLES) ? self::STYLES[$style] : '0';
         } elseif (is_int($style)) {
             $color = $style;
         } elseif (is_array($style)) {
@@ -151,18 +147,17 @@ class Style
      */
     public static function renderColor($text)
     {
-        if(!$text || false === strpos($text, '<')){
+        if (!$text || false === strpos($text, '<')) {
             return $text;
         }
-        if(!self::supportColor()){
+        if (!self::supportColor()) {
             return static::clearColor($text);
         }
-        if(!preg_match_all(self::COLOR_TAG, $text, $matches)){
+        if (!preg_match_all(self::COLOR_TAG, $text, $matches)) {
             return $text;
         }
-        foreach((array)$matches[0] as $i => $m)
-        {
-            if($style = isset(self::STYLES[$matches[1][$i]]) ? self::STYLES[$matches[1][$i]] : null){
+        foreach ((array) $matches[0] as $i => $m) {
+            if ($style = array_key_exists($matches[1][$i], self::STYLES) ? self::STYLES[$matches[1][$i]] : null) {
                 $tag = $matches[1][$i];
                 $match = $matches[2][$i];
                 $replace = sprintf("\33[%sm%s\33[0m", $style, $match);
@@ -191,10 +186,10 @@ class Style
      */
     public static function supportColor()
     {
-        if(DIRECTORY_SEPARATOR === '\\'){
+        if (DIRECTORY_SEPARATOR === '\\') {
             return '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI') || 'xterm' === getenv('TERM');
         }
-        if(!defined('STDOUT')){
+        if (!defined('STDOUT')) {
             return false;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Mon\console;
 
 use Closure;
@@ -22,7 +23,7 @@ class Console
 	/**
 	 * 版本信息
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.0.2';
 
 	/**
 	 * 输入实例
@@ -88,70 +89,66 @@ class Console
 	 */
 	public function run($exit = true)
 	{
-		if(!$this->command){
+		if (!$this->command) {
 			return $this->showError();
-		}
-		elseif($this->command == 'help' || $this->command == '-h'){
+		} elseif ($this->command == 'help' || $this->command == '-h') {
 			return $this->showHelp();
-		}
-		elseif($this->command == 'version' || $this->command == '-v'){
+		} elseif ($this->command == 'version' || $this->command == '-v') {
 			return $this->showVersion();
 		}
 
 		// 执行指令
 		$status = 0;
-		try{
-			if(isset($this->commands[$this->command])){
-				$status = $this->hanedle($this->command, $this->commands[$this->command]);
+		try {
+			if (isset($this->commands[$this->command])) {
+				$status = $this->hanedle((string) $this->command, $this->commands[$this->command]);
+			} else {
+				return $this->showError("The command [{$this->command}] not exists!");
 			}
-			else{
-                return $this->showError("The command [{$this->command}] not exists!");
-            }
-		}catch(Exception $e){
+		} catch (Exception $e) {
 			$status = $e->getCode() !== 0 ? $e->getCode() : 0;
 			$error = printf("Exception(%d): %s\nFile: %s(Line %d)\nTrace:\n%s\n", $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
 
 			return $this->showError($error, $status);
 		}
 
-		if($exit){
-			exit((int)$status);
+		if ($exit) {
+			exit((int) $status);
 		}
 	}
 
 	/**
 	 * 执行指令
 	 *
-	 * @param  [type] $command [description]
-	 * @param  [type] $handler [description]
-	 * @return [type]          [description]
+	 * @param  string 			$command [description]
+	 * @param  Closure|string 	$handler [description]
+	 * @return [type]          	[description]
 	 */
-	public function hanedle(String $command, $handler)
+	public function hanedle($command, $handler)
 	{
-		if($handler instanceof Closure){
+		if ($handler instanceof Closure) {
 			// 匿名函数
 			return call_user_func_array($handler, [$this->input, $this->output]);
-		}
-		elseif(class_exists($handler) && is_subclass_of($handler, "\\Mon\\console\\Command")){
+		} elseif (class_exists($handler) && is_subclass_of($handler, "\\Mon\\console\\Command")) {
 			$instance = new $handler();
 			return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
 		}
 
-		throw new CliException('The execute method is not found in the command: '.$command);
+		throw new CliException('The execute method is not found in the command: ' . $command);
 	}
 
 	/**
 	 * 注册指令
 	 *
-	 * @param [type] $command [description]
+	 * @param String $command [description]
 	 * @param String $handle  [description]
 	 */
-	public function addCommand(String $command, $handle, $option = [])
+	public function addCommand($command, $handle, $option = [])
 	{
 		$parse = $this->parseOption($option);
 
 		return $this->recordMessgae($command, $parse['desc'], $parse['alias'])
-					->recordHandle($command, $handle, $parse['alias']);
+			->recordHandle($command, $handle, $parse['alias']);
 	}
 
 	/**
@@ -162,11 +159,11 @@ class Console
 	 * @param  String|null $alias   [description]
 	 * @return [type]               [description]
 	 */
-	protected function recordHandle(String $command, $handle, String $alias = null)
+	protected function recordHandle($command, $handle, $alias = null)
 	{
 		$this->commands[$command] = $handle;
-		if(!is_null($alias)){
-			$alias = ($alias[0] == '-') ? $alias : '-'.$alias;
+		if (!is_null($alias)) {
+			$alias = ($alias[0] == '-') ? $alias : '-' . $alias;
 			$this->commands[$alias] = $handle;
 		}
 
@@ -181,12 +178,11 @@ class Console
 	 * @param  String|null $alias   [description]
 	 * @return [type]               [description]
 	 */
-	protected function recordMessgae(String $command, String $desc = null, String $alias = null)
+	protected function recordMessgae($command, $desc = null, $alias = null)
 	{
-		if(is_null($alias)){
+		if (is_null($alias)) {
 			$this->messages[$command] = $desc;
-		}
-		else{
+		} else {
 			$this->messages[$command] = [
 				'desc'	=> $desc,
 				'alias'	=> $alias
@@ -199,21 +195,19 @@ class Console
 	/**
 	 * 解析准备注册的指令的其他信息
 	 *
-	 * @param  [type] $command [description]
-	 * @return [type]          [description]
+	 * @param  array|string $command 	[description]
+	 * @return [type]          			[description]
 	 */
-	protected function parseOption($option):Array
+	protected function parseOption($option)
 	{
 		$parse = [];
-		if(is_array($option)){
-			$parse['desc'] = $option['desc'] ?? null;
-			$parse['alias'] = $option['alias'] ?? null;
-		}
-		elseif(is_string($option)){
+		if (is_array($option)) {
+			$parse['desc'] = isset($option['desc']) ? $option['desc'] : null;
+			$parse['alias'] = isset($option['alias']) ? $option['alias'] : null;
+		} elseif (is_string($option)) {
 			$parse['desc'] = $option;
 			$parse['alias'] = null;
-		}
-		else{
+		} else {
 			throw new InvalidArgumentException('Command option invalid arguments.');
 		}
 
@@ -227,8 +221,8 @@ class Console
 	 */
 	public function showVersion()
 	{
-		$status = $this->output->write("Mon-Console version " . self::VERSION);
-        exit(0);
+		$this->output->write("Mon-Console version " . self::VERSION);
+		exit(0);
 	}
 
 	/**
@@ -241,21 +235,19 @@ class Console
 		$this->output->write("\nWelcome to Mon-Console Application.\n");
 		$columns = ['command', 'alias', 'desc'];
 		$data = [];
-		foreach($this->messages as $command => $option)
-		{
-			if(is_array($option)){
-            	$desc = $option['desc'] ?: 'No description for the command';
-            	$alias = '-' . $option['alias'];
-            }
-            else{
-            	$desc = $option ?: 'No description for the command';
-            	$alias = '';
-            }
+		foreach ($this->messages as $command => $option) {
+			if (is_array($option)) {
+				$desc = $option['desc'] ?: 'No description for the command';
+				$alias = '-' . $option['alias'];
+			} else {
+				$desc = $option ?: 'No description for the command';
+				$alias = '';
+			}
 			$data[] = [$command, $alias, $desc];
 		}
 
 		$this->output->table($data, 'Mon-console Help', $columns);
-        exit(0);
+		exit(0);
 	}
 
 	/**
@@ -266,21 +258,20 @@ class Console
 	public function getHelp()
 	{
 		$commandWidth = 12;
-        foreach($this->messages as $command => $option)
-        {
-            $command = str_pad($command, $commandWidth, ' ');
-            if(is_array($option)){
-            	$desc = $option['desc'] ?: 'No description for the command';
-            	$alias = str_pad($option['alias'] ?: '', $commandWidth, ' ');
-            }
-            else{
-            	$desc = $option ?: 'No description for the command';
-            	$alias = str_pad('', $commandWidth, ' ');
-            }
-            $help .= "  {$command}   {$alias}   {$desc}\n";
-        }
+		$help = '';
+		foreach ($this->messages as $command => $option) {
+			$command = str_pad($command, $commandWidth, ' ');
+			if (is_array($option)) {
+				$desc = $option['desc'] ?: 'No description for the command';
+				$alias = str_pad($option['alias'] ?: '', $commandWidth, ' ');
+			} else {
+				$desc = $option ?: 'No description for the command';
+				$alias = str_pad('', $commandWidth, ' ');
+			}
+			$help .= "  {$command}   {$alias}   {$desc}\n";
+		}
 
-        return $help;
+		return $help;
 	}
 
 	/**
@@ -291,10 +282,10 @@ class Console
 	 */
 	public function showError($error = '', $ststus = 0)
 	{
-		if($error){
-            $this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));
-        }
+		if ($error) {
+			$this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));
+		}
 
-       	return $this->showHelp();
+		return $this->showHelp();
 	}
 }

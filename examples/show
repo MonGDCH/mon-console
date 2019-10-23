@@ -16,7 +16,8 @@ Mon\console\libs\Show::write(['aaaa', 'bbb', 'a' => 'ccc']);
 Mon\console\libs\Show::block('Hello Block!');
 Mon\console\libs\Show::block(['ni', 'hao']);
 
-Mon\console\libs\Show::splitLine(false);
+Mon\console\libs\Show::splitLine('Test');
+Mon\console\libs\Show::splitLine();
 
 
 $data = [
@@ -31,6 +32,6 @@ $list = [
     'b' => 'bbb',
 ];
 
-Mon\console\libs\Show::list([1, 2, 5]);
-Mon\console\libs\Show::list($list);
+Mon\console\libs\Show::dataList([1, 2, 5]);
+Mon\console\libs\Show::dataList($list);
 

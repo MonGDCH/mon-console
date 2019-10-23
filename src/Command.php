@@ -1,5 +1,6 @@
 <?php
- namespace Mon\console;
+
+namespace Mon\console;
 
 use Mon\console\Input;
 use Mon\console\Output;
@@ -12,15 +13,16 @@ use Mon\console\Output;
  */
 abstract class Command
 {
-    /**
-     * 构造方法
-     */
-    public function __construct(){}
+	/**
+	 * 构造方法
+	 */
+	public function __construct()
+	{ }
 
- 	/**
- 	 * 执行指令的接口方法
- 	 *
- 	 * @return [type] [description]
- 	 */
- 	abstract public function execute(Input $input, Output $output);
+	/**
+	 * 执行指令的接口方法
+	 *
+	 * @return [type] [description]
+	 */
+	abstract public function execute($input, $output);
 }
