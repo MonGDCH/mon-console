@@ -1,15 +1,15 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
 use Closure;
 use Exception;
 use InvalidArgumentException;
-use Mon\console\Command;
-use Mon\console\CliException;
-use Mon\console\Input;
-use Mon\console\Output;
-use Mon\console\libs\Style;
+use mon\console\Command;
+use mon\console\CliException;
+use mon\console\Input;
+use mon\console\Output;
+use mon\console\libs\Style;
 
 
 /**
@@ -23,7 +23,7 @@ class Console
 	/**
 	 * 版本信息
 	 */
-	const VERSION = '1.0.2';
+	const VERSION = '1.0.3';
 
 	/**
 	 * 输入实例
@@ -90,13 +90,12 @@ class Console
 	public function run($exit = true)
 	{
 		if (!$this->command) {
-			return $this->showError();
+			return $this->showHelp();
 		} elseif ($this->command == 'help' || $this->command == '-h') {
 			return $this->showHelp();
 		} elseif ($this->command == 'version' || $this->command == '-v') {
 			return $this->showVersion();
 		}
-
 		// 执行指令
 		$status = 0;
 		try {
@@ -129,7 +128,7 @@ class Console
 		if ($handler instanceof Closure) {
 			// 匿名函数
 			return call_user_func_array($handler, [$this->input, $this->output]);
-		} elseif (class_exists($handler) && is_subclass_of($handler, "\\Mon\\console\\Command")) {
+		} elseif (class_exists($handler) && is_subclass_of($handler, "\\mon\\console\\Command")) {
 			$instance = new $handler();
 			return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
 		}
@@ -147,8 +146,7 @@ class Console
 	{
 		$parse = $this->parseOption($option);
 
-		return $this->recordMessgae($command, $parse['desc'], $parse['alias'])
-			->recordHandle($command, $handle, $parse['alias']);
+		return $this->recordMessgae($command, $parse['desc'], $parse['alias'])->recordHandle($command, $handle, $parse['alias']);
 	}
 
 	/**
@@ -221,8 +219,18 @@ class Console
 	 */
 	public function showVersion()
 	{
-		$this->output->write("Mon-Console version " . self::VERSION);
+		$this->output->write("Mon-Console version " . $this->getVersion());
 		exit(0);
+	}
+
+	/**
+	 * 获取版本信息
+	 *
+	 * @return void
+	 */
+	public function getVersion()
+	{
+		return Self::VERSION;
 	}
 
 	/**
@@ -246,7 +254,7 @@ class Console
 			$data[] = [$command, $alias, $desc];
 		}
 
-		$this->output->table($data, 'Mon-console Help', $columns);
+		$this->output->table($data, 'Mon-Console Help', $columns);
 		exit(0);
 	}
 
@@ -285,7 +293,6 @@ class Console
 		if ($error) {
 			$this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));
 		}
-
-		return $this->showHelp();
+		exit(0);
 	}
 }

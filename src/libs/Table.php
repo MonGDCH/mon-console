@@ -1,10 +1,10 @@
 <?php
 
-namespace Mon\console\libs;
+namespace mon\console\libs;
 
-use Mon\console\libs\Util;
-use Mon\console\libs\StrBuffer;
-use Mon\console\libs\Show;
+use mon\console\libs\Util;
+use mon\console\libs\StrBuffer;
+use mon\console\libs\Show;
 
 /**
  * 控制台表格库

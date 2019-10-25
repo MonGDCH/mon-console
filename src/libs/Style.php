@@ -1,6 +1,6 @@
 <?php
 
-namespace Mon\console\libs;
+namespace mon\console\libs;
 
 use STDOUT;
 

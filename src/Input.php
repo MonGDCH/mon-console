@@ -1,11 +1,11 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
 use STDIN;
 use STDOUT;
-use Mon\console\libs\Parse;
-use Mon\console\libs\Password;
+use mon\console\libs\Parse;
+use mon\console\libs\Password;
 
 /**
  * 输入操作类

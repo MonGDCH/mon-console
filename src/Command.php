@@ -1,9 +1,9 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
-use Mon\console\Input;
-use Mon\console\Output;
+use mon\console\Input;
+use mon\console\Output;
 
 /**
  * 指令基类

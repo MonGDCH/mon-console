@@ -1,7 +1,7 @@
 {
     "name": "mongdch/mon-console",
     "description": "the php console utils.",
-    "version" : "1.0.2",
+    "version" : "1.0.3",
     "license": "MIT",
     "keywords": [
         "cli",
@@ -15,7 +15,7 @@
     ],
     "autoload": {
     	"psr-4": {
-	      	"Mon\\console\\" : "src/"
+	      	"mon\\console\\" : "src/"
 	    }
     },
     "require": {

@@ -1,5 +1,5 @@
 <?php
-class Demo extends \Mon\console\Command
+class Demo extends \mon\console\Command
 {
 	/**
 	 * 执行指令

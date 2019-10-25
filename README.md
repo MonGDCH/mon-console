@@ -5,16 +5,24 @@ PHP 命令行控制台工具，内置read及password获取等命令行交互工�
 
 #### 版本说明
 
+> v1.0.3
+
+- 优化错误提示
+- 调整命名空间
+
 > v1.0.2
+
 - 优化代码，优化在win环境下判断sh及bash脚本提示错误信息
 - 条件PHP版本要求，降为PHP5.6以上
 
 > v1.0.1
+
 - 优化代码，完全使用STDOUT作为输出流
 - 增加output对象list方法的有序列表支持
 - 修复table渲染的BUG
 
 > v1.0.0
+
 - 发布第一个版本
 
 
@@ -39,7 +47,7 @@ require '../vendor/autoload.php';
 /**
  * 指令回调对象
  */
-class Test extends \Mon\console\Command
+class Test extends \mon\console\Command
 {
     /**
      * 执行指令
@@ -57,7 +65,7 @@ class Test extends \Mon\console\Command
 
 
 // 获取应用实例
-$app = \Mon\console\App::instance();
+$app = \mon\console\App::instance();
 
 // 注册简单指令
 $app->add('test', Test::class, 'This is Test Command!');

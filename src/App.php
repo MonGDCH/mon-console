@@ -1,8 +1,8 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
-use Mon\console\Console;
+use mon\console\Console;
 
 /**
  * 应用驱动

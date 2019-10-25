@@ -5,19 +5,19 @@ date_default_timezone_set('PRC');
 require __DIR__ . '/../vendor/autoload.php';
 
 
-// Mon\console\libs\Show::write('Test');
-// Mon\console\libs\Show::write('Test', true, 3);
-// Mon\console\libs\Show::write('Test', true, true, false);
-Mon\console\libs\Show::write('Test', false, false, false);
-Mon\console\libs\Show::write('Demo', true, false);
-Mon\console\libs\Show::write(['aaaa', 'bbb', 'a' => 'ccc']);
+// mon\console\libs\Show::write('Test');
+// mon\console\libs\Show::write('Test', true, 3);
+// mon\console\libs\Show::write('Test', true, true, false);
+mon\console\libs\Show::write('Test', false, false, false);
+mon\console\libs\Show::write('Demo', true, false);
+mon\console\libs\Show::write(['aaaa', 'bbb', 'a' => 'ccc']);
 
 
-Mon\console\libs\Show::block('Hello Block!');
-Mon\console\libs\Show::block(['ni', 'hao']);
+mon\console\libs\Show::block('Hello Block!');
+mon\console\libs\Show::block(['ni', 'hao']);
 
-Mon\console\libs\Show::splitLine('Test');
-Mon\console\libs\Show::splitLine();
+mon\console\libs\Show::splitLine('Test');
+mon\console\libs\Show::splitLine();
 
 
 $data = [
@@ -25,13 +25,13 @@ $data = [
     ['d', 'e', 'f'],
 ];
 
-Mon\console\libs\Table::create($data, 'test', ['columns' => ['id', 'A', 'F']]);
+mon\console\libs\Table::create($data, 'test', ['columns' => ['id', 'A', 'F']]);
 
 $list = [
     'a' => 'aaa',
     'b' => 'bbb',
 ];
 
-Mon\console\libs\Show::dataList([1, 2, 5]);
-Mon\console\libs\Show::dataList($list);
+mon\console\libs\Show::dataList([1, 2, 5]);
+mon\console\libs\Show::dataList($list);
 

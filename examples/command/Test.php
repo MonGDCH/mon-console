@@ -1,6 +1,6 @@
 <?php
 
-class Test extends \Mon\console\Command
+class Test extends \mon\console\Command
 {
 	/**
 	 * 执行指令

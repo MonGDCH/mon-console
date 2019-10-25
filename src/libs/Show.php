@@ -1,11 +1,11 @@
 <?php
 
-namespace Mon\console\libs;
+namespace mon\console\libs;
 
 use STDOUT;
-use Mon\console\libs\Util;
-use Mon\console\libs\Style;
-use Mon\console\libs\StrBuffer;
+use mon\console\libs\Util;
+use mon\console\libs\Style;
+use mon\console\libs\StrBuffer;
 
 class Show
 {

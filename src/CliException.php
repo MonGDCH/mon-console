@@ -1,6 +1,6 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
 use Exception;
 

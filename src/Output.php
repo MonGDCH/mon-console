@@ -1,10 +1,10 @@
 <?php
 
-namespace Mon\console;
+namespace mon\console;
 
 use STDERR;
-use Mon\console\libs\Show;
-use Mon\console\libs\Table;
+use mon\console\libs\Show;
+use mon\console\libs\Table;
 
 /**
  * 输出操作类

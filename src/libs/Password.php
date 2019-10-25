@@ -1,9 +1,9 @@
 <?php
 
-namespace Mon\console\libs;
+namespace mon\console\libs;
 
-use Mon\console\CliException;
-use Mon\console\libs\Util;
+use mon\console\CliException;
+use mon\console\libs\Util;
 
 /**
  * 输入密码，隐藏字符

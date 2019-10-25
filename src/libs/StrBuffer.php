@@ -1,6 +1,6 @@
 <?php
 
-namespace Mon\console\libs;
+namespace mon\console\libs;
 
 /**
  * 字符串对象话

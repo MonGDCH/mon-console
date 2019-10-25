@@ -7,7 +7,7 @@ require __DIR__ . '/command/Demo.php';
 require __DIR__ . '/command/Test.php';
 
 // 获取应用实例
-$app = \Mon\console\App::instance();
+$app = \mon\console\App::instance();
 
 // 注册简单指令
 $app->add('test', Test::class, 'This is Test Command!');
