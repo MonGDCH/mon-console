@@ -3,14 +3,14 @@
 namespace mon\console\libs;
 
 use mon\console\libs\Util;
-use mon\console\libs\StrBuffer;
 use mon\console\libs\Show;
+use mon\console\libs\StrBuffer;
 
 /**
  * 控制台表格库
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version 1.0.0
  */
 class Table
 {
@@ -41,7 +41,7 @@ class Table
      * ];
      * Table::create($data, 'a table', $opts);
      * ```
-     * @return int
+     * @return integer
      */
     public static function create(array $data, $title = 'Data Table', array $opts = [])
     {

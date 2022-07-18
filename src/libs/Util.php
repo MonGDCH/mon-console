@@ -6,14 +6,14 @@ namespace mon\console\libs;
  * 系统辅助库
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version 1.0.0
  */
 class Util
 {
     /**
      * 判断bash脚本是否可用
      *
-     * @return bool
+     * @return boolean
      */
     public static function bashIsAvailable()
     {
@@ -24,7 +24,7 @@ class Util
     /**
      * 判断sh脚本是否可用
      *
-     * @return bool
+     * @return boolean
      */
     public static function shIsAvailable()
     {
@@ -36,7 +36,7 @@ class Util
     /**
      * 判断是否为windows环境
      *
-     * @return boolean [description]
+     * @return boolean
      */
     public static function isWindows()
     {
@@ -49,6 +49,9 @@ class Util
      * ```php
      * list($width, $height) = Self::getScreenSize();
      * ```
+     * 
+     * @param boolean $refresh  是否刷新
+     * @return mixed
      */
     public static function getScreenSize($refresh = false)
     {
@@ -111,7 +114,7 @@ class Util
      * 获取字符串长度
      *
      * @param string $string
-     * @return int
+     * @return integer
      */
     public static function strLen($string)
     {
@@ -130,8 +133,8 @@ class Util
      *     'key1'      => 'value1',
      *     'key2-test' => 'value2',
      * ]
-     * @param bool $expectInt
-     * @return int
+     * @param boolean $expectInt
+     * @return integer
      */
     public static function getKeyMaxWidth(array $data, $expectInt = false)
     {
@@ -229,10 +232,10 @@ class Util
     /**
      * 执行命令行指令
      *
-     * @param  string       $command      [description]
-     * @param  bool|boolean $returnStatus [description]
-     * @param  string|null  $cwd          [description]
-     * @return [type]                     [description]
+     * @param string $command   指令
+     * @param boolean $returnStatus 是否返回状态值
+     * @param string $cwd   指令路径
+     * @return string|array
      */
     public static function execute($command, $returnStatus = true, $cwd = null)
     {

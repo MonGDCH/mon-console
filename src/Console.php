@@ -4,12 +4,11 @@ namespace mon\console;
 
 use Closure;
 use Exception;
-use InvalidArgumentException;
-use mon\console\Command;
-use mon\console\CliException;
 use mon\console\Input;
 use mon\console\Output;
 use mon\console\libs\Style;
+use InvalidArgumentException;
+use mon\console\exception\ConsoleException;
 
 
 /**
@@ -28,21 +27,21 @@ class Console
 	/**
 	 * 输入实例
 	 *
-	 * @var [type]
+	 * @var Input
 	 */
 	protected $input;
 
 	/**
 	 * 输出实例
 	 *
-	 * @var [type]
+	 * @var Output
 	 */
 	protected $output;
 
 	/**
 	 * 执行的指令
 	 *
-	 * @var [type]
+	 * @var string
 	 */
 	protected $command;
 
@@ -72,7 +71,8 @@ class Console
 	/**
 	 * 初始化
 	 *
-	 * @param Input $input [description]
+	 * @param Input|null $input		输入对象实例
+	 * @param Output|null $output	输出对象实例
 	 */
 	public function __construct(Input $input = null, Output $output = null)
 	{
@@ -84,8 +84,8 @@ class Console
 	/**
 	 * 执行应用
 	 *
-	 * @param  boolean $exit 执行完指令是否exit
-	 * @return [type]        [description]
+	 * @param boolean $exit	是否结束应用
+	 * @return void
 	 */
 	public function run($exit = true)
 	{
@@ -119,9 +119,9 @@ class Console
 	/**
 	 * 执行指令
 	 *
-	 * @param  string 			$command [description]
-	 * @param  Closure|string 	$handler [description]
-	 * @return [type]          	[description]
+	 * @param string $command	指令名
+	 * @param mixed $handler	指令回调
+	 * @return mixed
 	 */
 	public function hanedle($command, $handler)
 	{
@@ -133,14 +133,16 @@ class Console
 			return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
 		}
 
-		throw new CliException('The execute method is not found in the command: ' . $command);
+		throw new ConsoleException('The execute method is not found in the command: ' . $command);
 	}
 
 	/**
 	 * 注册指令
 	 *
-	 * @param String $command [description]
-	 * @param String $handle  [description]
+	 * @param string $command	指令名
+	 * @param mixed $handle		指令回调
+	 * @param array $option		指令参数
+	 * @return Console
 	 */
 	public function addCommand($command, $handle, $option = [])
 	{
@@ -152,10 +154,10 @@ class Console
 	/**
 	 * 记录指令
 	 *
-	 * @param  String      $command [description]
-	 * @param  [type]      $handle  [description]
-	 * @param  String|null $alias   [description]
-	 * @return [type]               [description]
+	 * @param string $command	指令名
+	 * @param mixed $handle		指令回调
+	 * @param string $alias		指令别名
+	 * @return Console
 	 */
 	protected function recordHandle($command, $handle, $alias = null)
 	{
@@ -171,10 +173,10 @@ class Console
 	/**
 	 * 记录指令信息
 	 *
-	 * @param  String      $command [description]
-	 * @param  String|null $desc    [description]
-	 * @param  String|null $alias   [description]
-	 * @return [type]               [description]
+	 * @param string $command	指令名
+	 * @param string $desc		指令描述
+	 * @param string $alias		指令别名
+	 * @return Console
 	 */
 	protected function recordMessgae($command, $desc = null, $alias = null)
 	{
@@ -193,8 +195,8 @@ class Console
 	/**
 	 * 解析准备注册的指令的其他信息
 	 *
-	 * @param  array|string $command 	[description]
-	 * @return [type]          			[description]
+	 * @param array|string $option	指令参数
+	 * @return array
 	 */
 	protected function parseOption($option)
 	{
@@ -215,7 +217,7 @@ class Console
 	/**
 	 * 显示版本信息
 	 *
-	 * @return [type] [description]
+	 * @return void
 	 */
 	public function showVersion()
 	{
@@ -226,7 +228,7 @@ class Console
 	/**
 	 * 获取版本信息
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function getVersion()
 	{
@@ -236,7 +238,7 @@ class Console
 	/**
 	 * 显示帮助
 	 *
-	 * @return [type] [description]
+	 * @return void
 	 */
 	public function showHelp()
 	{
@@ -261,7 +263,7 @@ class Console
 	/**
 	 * 获取帮助信息
 	 *
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getHelp()
 	{
@@ -285,14 +287,15 @@ class Console
 	/**
 	 * 显示错误信息
 	 *
-	 * @param  string $error [description]
-	 * @return [type]        [description]
+	 * @param string $error	错误信息
+	 * @param integer $ststus 结束状态值
+	 * @return void
 	 */
 	public function showError($error = '', $ststus = 0)
 	{
 		if ($error) {
 			$this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));
 		}
-		exit(0);
+		exit($ststus);
 	}
 }

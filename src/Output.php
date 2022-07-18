@@ -17,22 +17,21 @@ class Output
     /**
      * 单例实体
      *
-     * @var null
+     * @var Output
      */
     protected static $instance = null;
 
     /**
      * 错误输出流
      *
-     * Property errorStream.
+     * @var STDERR
      */
     protected $errorStream = STDERR;
 
     /**
-     * 获取单例
+     * 获取实例
      *
-     * @see __construct
-     * @return static
+     * @return Output
      */
     public static function instance()
     {
@@ -44,8 +43,6 @@ class Output
 
     /**
      * 构造方法
-     *
-     * @param [type] $stream [description]
      */
     public function __construct()
     { }

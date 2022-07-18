@@ -15,22 +15,28 @@ class App
     /**
      * 对象单例
      *
-     * @var [type]
+     * @var App
      */
     protected static $instance;
 
     /**
      * 控制台实例
      *
-     * @var [type]
+     * @var Console
      */
     protected $console;
 
     /**
+     * 指令列表
+     *
+     * @var array
+     */
+    protected $commands = [];
+
+    /**
      * 获取实例
      *
-     * @param  [type] $option [description]
-     * @return [type]         [description]
+     * @return App
      */
     public static function instance()
     {
@@ -42,9 +48,7 @@ class App
     }
 
     /**
-     * 初始化
-     *
-     * @param array $commands [description]
+     * 构造方法
      */
     protected function __construct()
     {
@@ -54,7 +58,10 @@ class App
     /**
      * 注册指令
      *
-     * @param String $command [description]
+     * @param string $command   指令名称
+     * @param mixed $handle     指令回调
+     * @param array $option     额外参数
+     * @return App
      */
     public function add($command, $handle, $option = [])
     {
@@ -66,7 +73,7 @@ class App
     /**
      * 执行指令
      *
-     * @return [type] [description]
+     * @return void
      */
     public function run()
     {
@@ -76,7 +83,7 @@ class App
     /**
      * 获取自定义指令列表
      *
-     * @return [type] [description]
+     * @return array
      */
     public function getCommand()
     {

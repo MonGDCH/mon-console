@@ -1,9 +1,9 @@
 {
     "name": "mongdch/mon-console",
     "description": "the php console utils.",
-    "version" : "1.0.3",
     "license": "MIT",
     "keywords": [
+        "mon",
         "cli",
         "console"
     ],

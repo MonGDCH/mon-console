@@ -14,15 +14,11 @@ use mon\console\Output;
 abstract class Command
 {
 	/**
-	 * 构造方法
-	 */
-	public function __construct()
-	{ }
-
-	/**
 	 * 执行指令的接口方法
 	 *
-	 * @return [type] [description]
+	 * @param Input $input		输入实例
+	 * @param Output $output	输出实例
+	 * @return mixed
 	 */
 	abstract public function execute($input, $output);
 }

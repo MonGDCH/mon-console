@@ -25,28 +25,28 @@ class Input
 	/**
 	 * 原始argv数据
 	 *
-	 * @var [type]
+	 * @var array
 	 */
 	protected $data;
 
 	/**
 	 * 应用路径
 	 *
-	 * @var [type]
+	 * @var string
 	 */
 	protected $pwd;
 
 	/**
 	 * 完整的请求脚本
 	 *
-	 * @var [type]
+	 * @var string
 	 */
 	protected $fullScript;
 
 	/**
-	 * 执行的脚本名称
+	 * 执行的脚本
 	 *
-	 * @var [type]
+	 * @var array
 	 */
 	protected $script;
 
@@ -73,15 +73,15 @@ class Input
 	/**
 	 * 指令
 	 *
-	 * @var [type]
+	 * @var string
 	 */
 	protected $command;
 
 	/**
-	 * 获取单例
+	 * 获取实例
 	 *
-	 * @see __construct
-	 * @return static
+	 * @param array $argv
+	 * @return Input
 	 */
 	public static function instance($argv = null)
 	{
@@ -94,7 +94,7 @@ class Input
 	/**
 	 * 构造方法
 	 *
-	 * @param [type]  $argv  请求参数
+	 * @param array  $argv  请求参数
 	 */
 	protected function __construct($argv = null)
 	{
@@ -130,8 +130,8 @@ class Input
 	/**
 	 * 获取用户输入密码
 	 *
-	 * @param  string $tips [description]
-	 * @return [type]       [description]
+	 * @param string $tips	提示信息
+	 * @return string
 	 */
 	public function password($tips = 'Please Enter Password:')
 	{
@@ -141,7 +141,7 @@ class Input
 	/**
 	 * 获取路径
 	 *
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getPwd()
 	{
@@ -155,7 +155,9 @@ class Input
 	/**
 	 * 获取参数
 	 *
-	 * @return [type] [description]
+	 * @param string $key		参数名
+	 * @param mixed $defalue	默认参数值
+	 * @return mixed			结果值
 	 */
 	public function getArgs($key = null, $defalue = null)
 	{
@@ -169,8 +171,9 @@ class Input
 	/**
 	 * 设置参数
 	 *
-	 * @param array   $val     [description]
-	 * @param boolean $replace [description]
+	 * @param array $val	配置值
+	 * @param boolean $replace	是否替换
+	 * @return Input
 	 */
 	public function setArgs(array $val, $replace = false)
 	{
@@ -182,7 +185,9 @@ class Input
 	/**
 	 * 获取短标签
 	 *
-	 * @return [type] [description]
+	 * @param string $key		标签名
+	 * @param mixed $defalue	默认值
+	 * @return mixed			标签值
 	 */
 	public function getSopt($key = null, $defalue = null)
 	{
@@ -196,8 +201,9 @@ class Input
 	/**
 	 * 设置短标签
 	 *
-	 * @param array   $val     [description]
-	 * @param boolean $replace [description]
+	 * @param array $val		配置值
+	 * @param boolean $replace	是否替换
+	 * @return Input
 	 */
 	public function setSopt(array $val, $replace = false)
 	{
@@ -209,7 +215,9 @@ class Input
 	/**
 	 * 获取长标签
 	 *
-	 * @return [type] [description]
+	 * @param string $key		标签名
+	 * @param string $defalue	默认值
+	 * @return mixed
 	 */
 	public function getlopt($key = null, $defalue = null)
 	{
@@ -223,8 +231,9 @@ class Input
 	/**
 	 * 设置长标签
 	 *
-	 * @param array   $val     [description]
-	 * @param boolean $replace [description]
+	 * @param array $val		配置值
+	 * @param boolean $replace	是否替换
+	 * @return Input
 	 */
 	public function setlopt(array $val, $replace = false)
 	{
@@ -234,7 +243,7 @@ class Input
 	/**
 	 * 获取指令
 	 *
-	 * @return [type] [description]
+	 * @return string
 	 */
 	public function getCommand()
 	{
@@ -244,7 +253,8 @@ class Input
 	/**
 	 * 设置指令
 	 *
-	 * @param [type] $command [description]
+	 * @param string $command	指令名
+	 * @return Input
 	 */
 	public function setCommand($command)
 	{

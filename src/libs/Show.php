@@ -5,8 +5,13 @@ namespace mon\console\libs;
 use STDOUT;
 use mon\console\libs\Util;
 use mon\console\libs\Style;
-use mon\console\libs\StrBuffer;
 
+/**
+ * 展示内容
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0   2022-07-18
+ */
 class Show
 {
     /**
@@ -26,11 +31,11 @@ class Show
     /**
      * 消息写入标准输出流
      *
-     * @param string|array $messages 输出的消息
-     * @param boolean $nl True 会添加换行符, False 原样输出，不添加换行符
-     * @param int|boolean $quit 如果是int，则设置为退出代码。“True”转换为代码0并退出，“False”将不退出
-     * @param bool $flush 刷新流数据
-     * @return int
+     * @param string|array $messages    输出的消息
+     * @param boolean $nl               会添加换行符, False 原样输出，不添加换行符
+     * @param integer|boolean $quit     如果是int，则设置为退出代码。“True”转换为代码0并退出，“False”将不退出
+     * @param boolean $flush            刷新流数据
+     * @return integer
      */
     public static function write($messages, $nl = true, $quit = false, $flush = true)
     {
@@ -69,17 +74,16 @@ class Show
     /**
      * 块状文本
      *
-     * @param mixed $messages
-     * @param string|null $type
-     * @param string $style
-     * @param int|boolean $quit If is int, setting it is exit code.
-     * @return int
+     * @param string|array $messages    输出的消息
+     * @param string|null $type         消息类型
+     * @param integer|boolean $quit     如果是int，则设置为退出代码。“True”转换为代码0并退出，“False”将不退出
+     * @return integer
      */
     public static function block($messages, $type = 'INFO', $quit = false)
     {
         $messages = is_array($messages) ? array_values($messages) : array($messages);
 
-        // add type
+        // 添加消息类型
         if (null !== $type) {
             $messages[0] = sprintf('[%s] %s', strtoupper($type), $messages[0]);
         }
@@ -92,10 +96,10 @@ class Show
     /**
      * 分割线
      * 
-     * @param string $title
-     * @param string $char
-     * @param int $width
-     * @return int
+     * @param string $title 标题
+     * @param string $char  分割符
+     * @param int $width    宽度，默认整屏
+     * @return integer
      */
     public static function splitLine($title = null, $char = '-', $width = 0)
     {
@@ -115,7 +119,7 @@ class Show
     }
 
     /**
-     * 单个列表
+     * 数据列表
      * ```
      * $title = 'list title';
      * $data = [
@@ -123,9 +127,9 @@ class Show
      *      'name2' => 'value text 2',
      * ];
      * ```
-     * @param array $data
-     * @param string $title
-     * @return int|string
+     * @param array $data   数据源
+     * @param string $title 标题
+     * @return integer|string
      */
     public static function dataList($data, $title = null, $sequence = false, array $opts = [])
     {
@@ -151,7 +155,7 @@ class Show
     /**
      * 是否启用Buffer
      * 
-     * @return bool
+     * @return boolean
      */
     public static function isBuffering()
     {
@@ -160,6 +164,8 @@ class Show
 
     /**
      * 开启Buffer
+     * 
+     * @return void
      */
     public static function startBuffer()
     {
@@ -168,6 +174,8 @@ class Show
 
     /**
      * 清空Buffer
+     * 
+     * @return void
      */
     public static function clearBuffer()
     {
@@ -178,16 +186,14 @@ class Show
      * 关闭Buffer
      *
      * @see Show::write()
-     * @return null|string If flush = False, will return all buffer text.
+     * @return null|string
      */
     public static function stopBuffer($flush = true, $nl = false, $quit = false)
     {
         self::$buffering = false;
 
         if ($flush && self::$buffer) {
-            // flush to stream
             self::write(self::$buffer, $nl, $quit);
-            // clear buffer
             self::$buffer = null;
         }
 
@@ -198,9 +204,10 @@ class Show
      * 关闭Buffer，并输入Buffer内容
      *
      * @see Show::write()
+     * @return null|string
      */
     public static function flushBuffer($nl = false, $quit = false)
     {
-        self::stopBuffer(true, $nl, $quit);
+        return self::stopBuffer(true, $nl, $quit);
     }
 }

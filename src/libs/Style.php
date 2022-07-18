@@ -7,9 +7,8 @@ use STDOUT;
 /**
  * CLI染色库
  *
- * @package 在网上随便找来修改的优化下的
  * @author Mon <985558837@qq.com>
- * @version v1.0.1
+ * @version 1.0.0
  */
 class Style
 {
@@ -67,7 +66,6 @@ class Style
 
     /**
      * 正则规则
-     * @var string
      */
     const COLOR_TAG = '/<([a-z=;]+)>(.*?)<\\/\\1>/s';
 

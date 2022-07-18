@@ -4,8 +4,9 @@ namespace mon\console\libs;
 
 /**
  * 字符串对象话
- *
- * @package Inhere\Console\Components
+ * 
+ * @author Mon <985558837@qq.com>
+ * @version 1.0.0
  */
 final class StrBuffer
 {

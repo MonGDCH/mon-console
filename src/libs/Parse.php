@@ -6,7 +6,7 @@ namespace mon\console\libs;
  * 解析类库
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version 1.0.1   优化代码 2022-07-18
  */
 final class Parse
 {
@@ -19,8 +19,8 @@ final class Parse
     /**
      * 解析argv参数
      *
-     * @param  array  $argv    [description]
-     * @return [type]          [description]
+     * @param  array  $argv 请求参数
+     * @return array
      */
     public static function parseArgv(array $argv)
     {
@@ -79,8 +79,8 @@ final class Parse
     /**
      * 解析转义boolean值
      *
-     * @param  [type] $val [description]
-     * @return [type]      [description]
+     * @param mixed $val
+     * @return boolean
      */
     public static function parseBool($val)
     {
