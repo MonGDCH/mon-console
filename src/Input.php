@@ -11,7 +11,7 @@ use mon\console\libs\Password;
  * 输入操作类
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version	1.0.0
  */
 class Input
 {

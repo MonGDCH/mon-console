@@ -10,7 +10,7 @@ use mon\console\libs\Table;
  * 输出操作类
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0.0
+ * @version 1.0.0
  */
 class Output
 {
@@ -42,15 +42,9 @@ class Output
     }
 
     /**
-     * 构造方法
-     */
-    public function __construct()
-    { }
-
-    /**
      * 开启Buffer
      *
-     * @return [type] [description]
+     * @return void
      */
     public function startBuffer()
     {
@@ -60,7 +54,7 @@ class Output
     /**
      * 清空Buffer
      *
-     * @return [type] [description]
+     * @return void
      */
     public function clearBuffer()
     {
@@ -70,11 +64,11 @@ class Output
     /**
      * 关闭Buffer
      *
-     * @param  boolean $flush [description]
-     * @param  boolean      $nl    [description]
-     * @param  boolean      $quit  [description]
-     * @param  array        $opts  [description]
-     * @return [type]              [description]
+     * @param  boolean $flush 是否刷新
+     * @param  boolean $nl    是否换行
+     * @param  boolean $quit  是否退出
+     * @param  array   $opts  其他参数
+     * @return void
      */
     public function stopBuffer($flush = true, $nl = false, $quit = false, array $opts = [])
     {
@@ -84,10 +78,10 @@ class Output
     /**
      * 输出Buffer
      *
-     * @param  boolean $nl   [description]
-     * @param  boolean      $quit [description]
-     * @param  array        $opts [description]
-     * @return [type]             [description]
+     * @param  boolean $nl   是否换行
+     * @param  boolean $quit 是否退出
+     * @param  array   $opts 其他参数
+     * @return void
      */
     public function flush($nl = false, $quit = false, array $opts = [])
     {
@@ -97,9 +91,9 @@ class Output
     /**
      * 输出错误信息
      *
-     * @param  string  $text [description]
-     * @param  boolean $nl   [description]
-     * @return [type]        [description]
+     * @param  string  $text 错误信息
+     * @param  boolean $nl   是否换行
+     * @return integer
      */
     public function error($text = '', $nl = true)
     {
@@ -111,10 +105,10 @@ class Output
     /**
      * 写入
      * 
-     * @param  [type]  $messages [description]
-     * @param  boolean $nl       [description]
-     * @param  boolean $quit     [description]
-     * @return [type]            [description]
+     * @param  string  $messages 写入内容
+     * @param  boolean $nl       是否换行
+     * @param  boolean $quit     是否退出
+     * @return integer
      */
     public function write($messages, $nl = true, $quit = false)
     {
@@ -124,7 +118,10 @@ class Output
     /**
      * 块状文本
      *
-     * @see Show::block()
+     * @param string $messages  内容
+     * @param string $type      样式
+     * @param boolean $quit     是否退出
+     * @return integer
      */
     public function block($messages, $type = 'INFO', $quit = false)
     {
@@ -134,10 +131,10 @@ class Output
     /**
      * 分割线
      * 
-     * @param string $title
-     * @param string $char
-     * @param int $width
-     * @return int
+     * @param string $title     标题
+     * @param string $char      分割符
+     * @param integer $width    宽度
+     * @return integer
      */
     public function splitLine($title = null, $char = '-', $width = 0)
     {
@@ -147,11 +144,11 @@ class Output
     /**
      * 列表
      *
-     * @param  [type]       $data     一维数组
+     * @param  array       $data      一维数组
      * @param  string|null  $title    标题
      * @param  boolean $sequence 是否是有序列表
      * @param  array        $opts     额外配置参数
-     * @return [type]                 [description]
+     * @return integer
      */
     public function dataList($data, $title = null, $sequence = false, array $opts = [])
     {
@@ -164,7 +161,7 @@ class Output
      * @param  array  $data  二维数组
      * @param  string $title 表标题
      * @param  array  $opts  表列名称
-     * @return [type]        [description]
+     * @return integer
      */
     public function table(array $data, $title = 'Data Table', array $columns = [])
     {
@@ -173,6 +170,11 @@ class Output
 
     /**
      * json输出
+     *
+     * @param array $data       数据
+     * @param boolean $echo     是否输出
+     * @param integer $flags    json_encode参数
+     * @return integer|string
      */
     public function json($data, $echo = true, $flags = JSON_UNESCAPED_UNICODE)
     {
@@ -188,8 +190,8 @@ class Output
     /**
      * dump打印数据
      *
-     * @param  [type] $args [description]
-     * @return [type]       [description]
+     * @param mixed $args   数据集
+     * @return integer
      */
     public function dump(...$args)
     {

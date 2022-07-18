@@ -12,10 +12,10 @@ use mon\console\exception\ConsoleException;
 
 
 /**
- * Mon-Console控制台
+ * mon-console控制台
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version 1.0.0
  */
 class Console
 {

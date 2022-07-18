@@ -8,7 +8,7 @@ use mon\console\Console;
  * 应用驱动
  *
  * @author Mon <98558837@qq.om>
- * @version v1.0.0
+ * @version 1.0.0
  */
 class App
 {

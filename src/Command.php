@@ -9,7 +9,7 @@ use mon\console\Output;
  * 指令基类
  *
  * @author Mon <985558837@qq.com>
- * @version v1.0
+ * @version 1.0.0
  */
 abstract class Command
 {
