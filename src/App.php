@@ -8,10 +8,17 @@ use mon\console\Console;
  * 应用驱动
  *
  * @author Mon <98558837@qq.om>
- * @version 1.0.0
+ * @version 1.0.6
  */
 class App
 {
+    /**
+     * 版本号
+     * 
+     * @var string
+     */
+    const VERSION = '1.0.6';
+
     /**
      * 对象单例
      *
@@ -56,11 +63,21 @@ class App
     }
 
     /**
+     * 获取版本号
+     *
+     * @return string
+     */
+    public function getVersion()
+    {
+        return self::VERSION;
+    }
+
+    /**
      * 注册指令
      *
-     * @param string $command   指令名称
-     * @param mixed $handle     指令回调
-     * @param array $option     额外参数
+     * @param string $command       指令名称
+     * @param mixed $handle         指令回调
+     * @param array|string $option  额外参数
      * @return App
      */
     public function add($command, $handle, $option = [])

@@ -6,12 +6,12 @@ use mon\console\Input;
 use mon\console\Output;
 
 /**
- * 指令基类
+ * 指令接口
  *
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
  */
-abstract class Command
+interface Command
 {
 	/**
 	 * 执行指令的接口方法
@@ -20,5 +20,5 @@ abstract class Command
 	 * @param Output $output	输出实例
 	 * @return mixed
 	 */
-	abstract public function execute($input, $output);
+	public function execute($input, $output);
 }

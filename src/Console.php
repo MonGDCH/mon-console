@@ -20,11 +20,6 @@ use mon\console\exception\ConsoleException;
 class Console
 {
 	/**
-	 * 版本信息
-	 */
-	const VERSION = '1.0.3';
-
-	/**
 	 * 输入实例
 	 *
 	 * @var Input
@@ -58,14 +53,10 @@ class Console
 	 * @var array
 	 */
 	protected $messages = [
-		'help'		=> [
-			'alias'		=> 'h',
-			'desc'		=> 'Display help for command'
+		'help'	=> [
+			'alias'	=> 'h',
+			'desc'	=> 'Display help for command'
 		],
-		'version'	=> [
-			'alias'		=> 'v',
-			'desc'		=> 'Display this console version'
-		]
 	];
 
 	/**
@@ -93,9 +84,8 @@ class Console
 			return $this->showHelp();
 		} elseif ($this->command == 'help' || $this->command == '-h') {
 			return $this->showHelp();
-		} elseif ($this->command == 'version' || $this->command == '-v') {
-			return $this->showVersion();
 		}
+
 		// 执行指令
 		$status = 0;
 		try {
@@ -215,73 +205,28 @@ class Console
 	}
 
 	/**
-	 * 显示版本信息
-	 *
-	 * @return void
-	 */
-	public function showVersion()
-	{
-		$this->output->write("Mon-Console version " . $this->getVersion());
-		exit(0);
-	}
-
-	/**
-	 * 获取版本信息
-	 *
-	 * @return string
-	 */
-	public function getVersion()
-	{
-		return Self::VERSION;
-	}
-
-	/**
 	 * 显示帮助
 	 *
 	 * @return void
 	 */
 	public function showHelp()
 	{
-		$this->output->write("\nWelcome to Mon-Console Application.\n");
+		$this->output->write('');
 		$columns = ['command', 'alias', 'desc'];
 		$data = [];
 		foreach ($this->messages as $command => $option) {
 			if (is_array($option)) {
-				$desc = $option['desc'] ?: 'No description for the command';
+				$desc = $option['desc'] ?: '';
 				$alias = '-' . $option['alias'];
 			} else {
-				$desc = $option ?: 'No description for the command';
+				$desc = $option ?: '';
 				$alias = '';
 			}
 			$data[] = [$command, $alias, $desc];
 		}
 
-		$this->output->table($data, 'Mon-Console Help', $columns);
+		$this->output->table($data, 'Help', $columns);
 		exit(0);
-	}
-
-	/**
-	 * 获取帮助信息
-	 *
-	 * @return string
-	 */
-	public function getHelp()
-	{
-		$commandWidth = 12;
-		$help = '';
-		foreach ($this->messages as $command => $option) {
-			$command = str_pad($command, $commandWidth, ' ');
-			if (is_array($option)) {
-				$desc = $option['desc'] ?: 'No description for the command';
-				$alias = str_pad($option['alias'] ?: '', $commandWidth, ' ');
-			} else {
-				$desc = $option ?: 'No description for the command';
-				$alias = str_pad('', $commandWidth, ' ');
-			}
-			$help .= "  {$command}   {$alias}   {$desc}\n";
-		}
-
-		return $help;
 	}
 
 	/**

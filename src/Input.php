@@ -2,8 +2,6 @@
 
 namespace mon\console;
 
-use STDIN;
-use STDOUT;
 use mon\console\libs\Parse;
 use mon\console\libs\Password;
 

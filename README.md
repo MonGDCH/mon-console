@@ -5,9 +5,15 @@ PHP 命令行控制台工具，内置read及password获取等命令行交互工�
 
 #### 版本说明
 
+> 1.0.6
+
+- 调整优化代码结构
+- 移除内置的`version`指令
+
 > 1.0.5
 
 - 修正发布缺失的文件
+
 
 > 1.0.4
 
@@ -68,7 +74,7 @@ class Test extends \mon\console\Command
 	 * @param \mon\console\Output $output	输出对象实例
      * @return void
      */
-    public function execute(Input $input, Output \mon\console\$output)
+    public function execute(Input $input, Output $output)
     {
         $name = $input->read('What\'s your name?  ');
         $password = $input->password();
