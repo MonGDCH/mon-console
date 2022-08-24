@@ -1,5 +1,7 @@
 <?php
 
+namespace command;
+
 use mon\console\interfaces\Command;
 
 class Not implements Command

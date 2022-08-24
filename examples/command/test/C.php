@@ -1,5 +1,7 @@
 <?php
 
+namespace command\test;
+
 use mon\console\interfaces\Command;
 
 class C implements Command

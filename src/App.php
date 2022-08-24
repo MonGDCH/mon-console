@@ -93,8 +93,12 @@ class App
             if ($file->isDir() || $file->getExtension() != 'php') {
                 continue;
             }
-            // 获取类名称
-            $className = $namspace . '\\' . $file->getBasename('.php');
+
+            // 获取对象名称
+            $dirname = dirname(str_replace($path, '', $file->getPathname()));
+            $beforName = str_replace(DIRECTORY_SEPARATOR, '\\', $dirname);
+            $beforNamespace = $beforName == '\\' ? '' : $beforName;
+            $className = $namspace . $beforNamespace . '\\' . $file->getBasename('.php');
             if (!is_subclass_of($className, '\\mon\\console\\interfaces\\Command')) {
                 continue;
             }

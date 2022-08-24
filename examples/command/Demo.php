@@ -1,5 +1,7 @@
 <?php
 
+namespace command;
+
 use mon\console\Command;
 
 class Demo extends Command
