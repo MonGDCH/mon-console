@@ -146,7 +146,7 @@ class Show
         ], $opts);
 
         if ($title) {
-            $title = ucwords(trim($title));
+            $title = trim($title);
             $string .= Util::wrapTag($title, $opts['titleStyle']) . PHP_EOL;
         }
 

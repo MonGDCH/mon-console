@@ -42,7 +42,7 @@ class Util
      */
     public static function isWindows(): bool
     {
-        return stripos(PHP_OS, 'WIN') !== false;
+        return DIRECTORY_SEPARATOR === '\\';
     }
 
     /**
@@ -161,7 +161,7 @@ class Util
      *     'version'  => '4.4.5',
      * ]
      * @param  array $opts  样式参数
-     * @param  boolean $sequence    开启间隔
+     * @param  boolean $sequence    是否是有序列表
      * @return string
      */
     public static function spliceKeyValue(array $data, array $opts = [], bool $sequence = false): string
