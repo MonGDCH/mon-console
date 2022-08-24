@@ -1,8 +1,8 @@
 <?php
 
-namespace mon\console\libs;
+declare(strict_types=1);
 
-use STDOUT;
+namespace mon\console\libs;
 
 /**
  * CLI染色库
@@ -114,7 +114,7 @@ class Style
      * @param string|int|array $style
      * @return string
      */
-    public static function color($text, $style = null)
+    public static function color(string $text, $style = null): string
     {
         if (!$text) {
             return $text;
@@ -141,9 +141,9 @@ class Style
      * 渲染颜色标签到颜色样式
      *
      * @param string $text
-     * @return mixed|string
+     * @return string
      */
-    public static function renderColor($text)
+    public static function renderColor(string $text): string
     {
         if (!$text || false === strpos($text, '<')) {
             return $text;
@@ -172,7 +172,7 @@ class Style
      * @param string $text
      * @return string
      */
-    public static function clearColor($text)
+    public static function clearColor(string $text): string
     {
         return preg_replace('/\\033\\[(?:\\d;?)+m/', '', strip_tags($text));
     }
@@ -182,7 +182,7 @@ class Style
      *
      * @return boolean
      */
-    public static function supportColor()
+    public static function supportColor(): bool
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             return '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI') || 'xterm' === getenv('TERM');
@@ -199,7 +199,7 @@ class Style
      *
      * @return boolean
      */
-    public static function isInteractive($fileDescriptor)
+    public static function isInteractive($fileDescriptor): bool
     {
         return function_exists('posix_isatty') && @posix_isatty($fileDescriptor);
     }

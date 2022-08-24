@@ -1,7 +1,14 @@
 <?php
 
-class Demo implements \mon\console\Command
+use mon\console\Command;
+
+class Demo extends Command
 {
+	protected static $defaultName = 'demos';
+
+	protected static $defaultDescription = 'This is Demo Command!';
+
+
 	/**
 	 * 执行指令
 	 *

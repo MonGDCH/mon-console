@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console\libs;
 
 use mon\console\libs\Util;
@@ -43,7 +45,7 @@ class Table
      * ```
      * @return integer
      */
-    public static function create(array $data, $title = 'Data Table', array $opts = [])
+    public static function create(array $data, string $title = 'Data Table', array $opts = []): int
     {
         if (!$data) {
             return -404;
@@ -119,7 +121,8 @@ class Table
             $tStyle = $opts['titleStyle'] ?: 'bold';
             $title = ucwords(trim($title));
             $titleLength = mb_strlen($title, 'UTF-8');
-            $indentSpace = str_pad(' ', ceil($tableWidth / 2) - ceil($titleLength / 2) + ($columnCount * 2), ' ');
+            $len = ceil($tableWidth / 2) - ceil($titleLength / 2) + ($columnCount * 2);
+            $indentSpace = str_pad(' ', (int)$len, ' ');
             $buf->write("  {$indentSpace}<$tStyle>{$title}</$tStyle>\n");
         }
 

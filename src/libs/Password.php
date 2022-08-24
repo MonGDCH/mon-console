@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console\libs;
 
 use mon\console\libs\Util;
@@ -17,9 +19,10 @@ class Password
      * 发起密码输入
      *
      * @param string $tips  提示信息
+     * @throws ConsoleException
      * @return string   输入的密码
      */
-    public static function interaction($tips = 'Enter Password:')
+    public static function interaction(string $tips = 'Enter Password:'): string
     {
         // windows通过vb脚本获取输入的密码
         if (Util::isWindows()) {
@@ -36,7 +39,7 @@ class Password
         // liunx通过bash脚本获取输入的密码
         if (Util::bashIsAvailable()) {
             $command = sprintf('bash -c "read -p \'%s\' -s user_input && echo $user_input"', $tips);
-            $password = Util::execute($command, false);
+            $password = Util::execute($command);
             echo "\n";
             return $password;
         }
@@ -49,7 +52,7 @@ class Password
      *
      * @return string
      */
-    public static function getTempDir()
+    public static function getTempDir(): string
     {
         if (function_exists('sys_get_temp_dir')) {
             $tmp = sys_get_temp_dir();

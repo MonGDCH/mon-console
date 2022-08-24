@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console\libs;
 
 /**
@@ -22,7 +24,7 @@ final class Parse
      * @param  array  $argv 请求参数
      * @return array
      */
-    public static function parseArgv(array $argv)
+    public static function parseArgv(array $argv): array
     {
         $args = $short_opts = $long_opts = [];
         $isCommand = true;
@@ -79,10 +81,10 @@ final class Parse
     /**
      * 解析转义boolean值
      *
-     * @param mixed $val
-     * @return boolean
+     * @param string $val
+     * @return boolean|string
      */
-    public static function parseBool($val)
+    public static function parseBool(string $val)
     {
         $sVal = strtolower($val);
         if (false !== strpos(self::TRUE_WORDS, "|{$sVal}|")) {

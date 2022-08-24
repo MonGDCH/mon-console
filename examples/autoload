@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+use mon\console\App;
+
+require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/command/Demo.php';
+require __DIR__ . '/command/Test.php';
+require __DIR__ . '/command/Not.php';
+require __DIR__ . '/command/xx/C.php';
+
+$app = new App;
+
+$path = __DIR__ . '/command';
+$namspace = '';
+
+$app->setTitle('Wellcome Mon Console');
+
+// 自动加载目录下指令
+$app->load($path, $namspace);
+
+
+$app->run();

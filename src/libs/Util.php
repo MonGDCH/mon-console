@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console\libs;
 
 /**
@@ -15,10 +17,10 @@ class Util
      *
      * @return boolean
      */
-    public static function bashIsAvailable()
+    public static function bashIsAvailable(): bool
     {
         $checkCmd = "bash -c 'echo OK'";
-        return self::execute($checkCmd, false) === 'OK';
+        return self::execute($checkCmd) === 'OK';
     }
 
     /**
@@ -26,11 +28,11 @@ class Util
      *
      * @return boolean
      */
-    public static function shIsAvailable()
+    public static function shIsAvailable(): bool
     {
         $checkCmd = "sh -c 'echo OK'";
 
-        return self::execute($checkCmd, false) === 'OK';
+        return self::execute($checkCmd) === 'OK';
     }
 
     /**
@@ -38,7 +40,7 @@ class Util
      *
      * @return boolean
      */
-    public static function isWindows()
+    public static function isWindows(): bool
     {
         return stripos(PHP_OS, 'WIN') !== false;
     }
@@ -51,9 +53,9 @@ class Util
      * ```
      * 
      * @param boolean $refresh  是否刷新
-     * @return mixed
+     * @return array|false
      */
-    public static function getScreenSize($refresh = false)
+    public static function getScreenSize(bool $refresh = false)
     {
         static $size;
         if ($size !== null && !$refresh) {
@@ -93,11 +95,11 @@ class Util
     /**
      * 标签化字符串
      *
-     * @param string $string
-     * @param string $tag
+     * @param string $string    内容
+     * @param string $tag       标签
      * @return string
      */
-    public static function wrapTag($string, $tag)
+    public static function wrapTag(string $string, string $tag): string
     {
         if (!$string) {
             return '';
@@ -113,10 +115,10 @@ class Util
     /**
      * 获取字符串长度
      *
-     * @param string $string
+     * @param string $string    字符串
      * @return integer
      */
-    public static function strLen($string)
+    public static function strLen(string $string): int
     {
         if (false === $encoding = mb_detect_encoding($string, null, true)) {
             return strlen($string);
@@ -128,15 +130,15 @@ class Util
     /**
      * 获取键值最大宽度
      *
-     * @param  array $data
+     * @param  array $data  数据数组
      * [
      *     'key1'      => 'value1',
      *     'key2-test' => 'value2',
      * ]
-     * @param boolean $expectInt
+     * @param boolean $expectInt  转数字
      * @return integer
      */
-    public static function getKeyMaxWidth(array $data, $expectInt = false)
+    public static function getKeyMaxWidth(array $data, bool $expectInt = false): int
     {
         $keyMaxWidth = 0;
 
@@ -153,15 +155,16 @@ class Util
     /**
      * 拼接数组
      *
-     * @param  array $data
+     * @param  array $data  数据数组
      * e.g [
      *     'system'  => 'Linux',
      *     'version'  => '4.4.5',
      * ]
-     * @param  array $opts
+     * @param  array $opts  样式参数
+     * @param  boolean $sequence    开启间隔
      * @return string
      */
-    public static function spliceKeyValue(array $data, array $opts = [], $sequence = false)
+    public static function spliceKeyValue(array $data, array $opts = [], bool $sequence = false): string
     {
         $text = '';
         $opts = array_merge([
@@ -233,11 +236,10 @@ class Util
      * 执行命令行指令
      *
      * @param string $command   指令
-     * @param boolean $returnStatus 是否返回状态值
-     * @param string $cwd   指令路径
-     * @return string|array
+     * @param string $cwd       指令路径
+     * @return string
      */
-    public static function execute($command, $returnStatus = true, $cwd = null)
+    public static function execute(string $command, string $cwd = null): string
     {
         $return_var = 1;
 
@@ -269,10 +271,6 @@ class Util
                 }
             }
         }
-        if ($returnStatus) {
-            return ['output' => trim($output), 'status' => $return_var];
-        }
-
         return trim($output);
     }
 }

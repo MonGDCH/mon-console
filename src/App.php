@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console;
 
 use mon\console\Console;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 
 /**
  * 应用驱动
  *
  * @author Mon <98558837@qq.om>
- * @version 1.0.6
+ * @version 1.1.0
  */
 class App
 {
@@ -17,7 +21,7 @@ class App
      * 
      * @var string
      */
-    const VERSION = '1.0.6';
+    const VERSION = '1.1.0';
 
     /**
      * 对象单例
@@ -45,7 +49,7 @@ class App
      *
      * @return App
      */
-    public static function instance()
+    public static function instance(): App
     {
         if (is_null(static::$instance)) {
             static::$instance = new static();
@@ -57,7 +61,7 @@ class App
     /**
      * 构造方法
      */
-    protected function __construct()
+    public function __construct()
     {
         $this->console = new Console();
     }
@@ -67,9 +71,53 @@ class App
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return self::VERSION;
+    }
+
+    /**
+     * 加载目录下所有类文件，生成指令
+     *
+     * @param string $path  目录路径
+     * @param string $namspace  基础命名空间，结合文件名赋予命名空间
+     * @return App
+     */
+    public function load(string $path, string $namspace = ''): App
+    {
+        // 递归获取文件
+        $dir_iterator = new RecursiveDirectoryIterator($path);
+        $iterator = new RecursiveIteratorIterator($dir_iterator);
+        foreach ($iterator as $file) {
+            // 过滤非PHP文件
+            if ($file->isDir() || $file->getExtension() != 'php') {
+                continue;
+            }
+            // 获取类名称
+            $className = $namspace . '\\' . $file->getBasename('.php');
+            if (!is_subclass_of($className, '\\mon\\console\\interfaces\\Command')) {
+                continue;
+            }
+            // 判断是否存在定义指令名方法
+            if (method_exists($className, 'getCommandName')) {
+                $command = $className::getCommandName();
+                if (!$command) {
+                    continue;
+                }
+                // 获取指令别名及指令描述
+                $alias = $desc = null;
+                if (method_exists($className, 'getCommandAliasName')) {
+                    $alias = $className::getCommandAliasName();
+                }
+                if (method_exists($className, 'getCommandDesc')) {
+                    $desc = $className::getCommandDesc();
+                }
+                // 注册指令
+                $this->add($command, $className, ['alias' => $alias, 'desc' => $desc]);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -80,7 +128,7 @@ class App
      * @param array|string $option  额外参数
      * @return App
      */
-    public function add($command, $handle, $option = [])
+    public function add(string $command, $handle, $option = []): App
     {
         $this->commands[] = $command;
         $this->console->addCommand($command, $handle, $option);
@@ -98,11 +146,23 @@ class App
     }
 
     /**
+     * 设置控制台标题
+     *
+     * @param string $title
+     * @return App
+     */
+    public function setTitle(string $title): App
+    {
+        $this->console->setTitle($title);
+        return $this;
+    }
+
+    /**
      * 获取自定义指令列表
      *
      * @return array
      */
-    public function getCommand()
+    public function getCommand(): array
     {
         return $this->commands;
     }

@@ -1,21 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console;
 
 use Closure;
-use Exception;
+use Throwable;
 use mon\console\Input;
 use mon\console\Output;
 use mon\console\libs\Style;
 use InvalidArgumentException;
 use mon\console\exception\ConsoleException;
 
-
 /**
  * mon-console控制台
  *
  * @author Mon <985558837@qq.com>
- * @version 1.0.0
+ * @version 1.1.0
  */
 class Console
 {
@@ -48,6 +49,13 @@ class Console
 	protected $commands = [];
 
 	/**
+	 * 应用标题
+	 *
+	 * @var string
+	 */
+	protected $title = '';
+
+	/**
 	 * 指令的描述
 	 *
 	 * @var array
@@ -73,12 +81,24 @@ class Console
 	}
 
 	/**
+	 * 设置应用名
+	 *
+	 * @param string $title
+	 * @return Console
+	 */
+	public function setTitle(string $title): Console
+	{
+		$this->title = $title;
+		return $this;
+	}
+
+	/**
 	 * 执行应用
 	 *
 	 * @param boolean $exit	是否结束应用
 	 * @return void
 	 */
-	public function run($exit = true)
+	public function run(bool $exit = true)
 	{
 		if (!$this->command) {
 			return $this->showHelp();
@@ -94,9 +114,9 @@ class Console
 			} else {
 				return $this->showError("The command [{$this->command}] not exists!");
 			}
-		} catch (Exception $e) {
+		} catch (Throwable $e) {
 			$status = $e->getCode() !== 0 ? $e->getCode() : 0;
-			$error = printf("Exception(%d): %s\nFile: %s(Line %d)\nTrace:\n%s\n", $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
+			$error = sprintf("Exception(%d): %s\nFile: %s(Line %d)\nTrace:\n%s\n", $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
 
 			return $this->showError($error, $status);
 		}
@@ -110,17 +130,20 @@ class Console
 	 * 执行指令
 	 *
 	 * @param string $command	指令名
-	 * @param mixed $handler	指令回调
+	 * @param Closure|string $handler	指令回调
+	 * @throws ConsoleException
 	 * @return mixed
 	 */
-	public function hanedle($command, $handler)
+	public function hanedle(string $command, $handler)
 	{
 		if ($handler instanceof Closure) {
 			// 匿名函数
-			return call_user_func_array($handler, [$this->input, $this->output]);
-		} elseif (class_exists($handler) && is_subclass_of($handler, "\\mon\\console\\Command")) {
+			// return call_user_func_array($handler, [$this->input, $this->output]);
+			return $handler($this->input, $this->output);
+		} elseif (class_exists($handler) && is_subclass_of($handler, "\\mon\\console\\interfaces\\Command")) {
 			$instance = new $handler();
-			return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
+			// return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
+			return $instance->execute($this->input, $this->output);
 		}
 
 		throw new ConsoleException('The execute method is not found in the command: ' . $command);
@@ -129,12 +152,12 @@ class Console
 	/**
 	 * 注册指令
 	 *
-	 * @param string $command	指令名
-	 * @param mixed $handle		指令回调
-	 * @param array $option		指令参数
+	 * @param string $command		指令名
+	 * @param mixed $handle			指令回调
+	 * @param array|string $option	指令参数
 	 * @return Console
 	 */
-	public function addCommand($command, $handle, $option = [])
+	public function addCommand(string $command, $handle, $option = []): Console
 	{
 		$parse = $this->parseOption($option);
 
@@ -149,7 +172,7 @@ class Console
 	 * @param string $alias		指令别名
 	 * @return Console
 	 */
-	protected function recordHandle($command, $handle, $alias = null)
+	protected function recordHandle(string $command, $handle, string $alias = null): Console
 	{
 		$this->commands[$command] = $handle;
 		if (!is_null($alias)) {
@@ -168,7 +191,7 @@ class Console
 	 * @param string $alias		指令别名
 	 * @return Console
 	 */
-	protected function recordMessgae($command, $desc = null, $alias = null)
+	protected function recordMessgae(string $command, string $desc = null, string $alias = null): Console
 	{
 		if (is_null($alias)) {
 			$this->messages[$command] = $desc;
@@ -186,14 +209,15 @@ class Console
 	 * 解析准备注册的指令的其他信息
 	 *
 	 * @param array|string $option	指令参数
+	 * @throws InvalidArgumentException
 	 * @return array
 	 */
-	protected function parseOption($option)
+	protected function parseOption($option): array
 	{
 		$parse = [];
 		if (is_array($option)) {
-			$parse['desc'] = isset($option['desc']) ? $option['desc'] : null;
-			$parse['alias'] = isset($option['alias']) ? $option['alias'] : null;
+			$parse['desc'] = $option['desc'] ?? null;
+			$parse['alias'] = $option['alias'] ?? null;
 		} elseif (is_string($option)) {
 			$parse['desc'] = $option;
 			$parse['alias'] = null;
@@ -211,7 +235,7 @@ class Console
 	 */
 	public function showHelp()
 	{
-		$this->output->write('');
+		$this->output->write("\n" . $this->title);
 		$columns = ['command', 'alias', 'desc'];
 		$data = [];
 		foreach ($this->messages as $command => $option) {
@@ -236,7 +260,7 @@ class Console
 	 * @param integer $ststus 结束状态值
 	 * @return void
 	 */
-	public function showError($error = '', $ststus = 0)
+	public function showError(string $error = '', int $ststus = 0)
 	{
 		if ($error) {
 			$this->output->write(Style::color("<red>[ERROR]</red>: {$error}"));

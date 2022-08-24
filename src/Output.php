@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console;
 
 use STDERR;
@@ -33,7 +35,7 @@ class Output
      *
      * @return Output
      */
-    public static function instance()
+    public static function instance(): Output
     {
         if (is_null(self::$instance)) {
             self::$instance = new self();
@@ -70,7 +72,7 @@ class Output
      * @param  array   $opts  其他参数
      * @return void
      */
-    public function stopBuffer($flush = true, $nl = false, $quit = false, array $opts = [])
+    public function stopBuffer(bool $flush = true, bool $nl = false, bool $quit = false, array $opts = [])
     {
         Show::stopBuffer($flush, $nl, $quit, $opts);
     }
@@ -83,7 +85,7 @@ class Output
      * @param  array   $opts 其他参数
      * @return void
      */
-    public function flush($nl = false, $quit = false, array $opts = [])
+    public function flush(bool $nl = false, bool $quit = false, array $opts = [])
     {
         $this->stopBuffer(true, $nl, $quit, $opts);
     }
@@ -95,7 +97,7 @@ class Output
      * @param  boolean $nl   是否换行
      * @return integer
      */
-    public function error($text = '', $nl = true)
+    public function error(string $text = '', bool $nl = true): int
     {
         fwrite($this->errorStream, $text . ($nl ? "\n" : null));
 
@@ -110,7 +112,7 @@ class Output
      * @param  boolean $quit     是否退出
      * @return integer
      */
-    public function write($messages, $nl = true, $quit = false)
+    public function write(string $messages, bool $nl = true, bool $quit = false): int
     {
         return Show::write($messages, $nl, $quit, true);
     }
@@ -123,7 +125,7 @@ class Output
      * @param boolean $quit     是否退出
      * @return integer
      */
-    public function block($messages, $type = 'INFO', $quit = false)
+    public function block(string $messages, string $type = 'INFO', bool $quit = false): int
     {
         return Show::block($messages, $type, $quit);
     }
@@ -136,7 +138,7 @@ class Output
      * @param integer $width    宽度
      * @return integer
      */
-    public function splitLine($title = null, $char = '-', $width = 0)
+    public function splitLine(string $title = null, string $char = '-', int $width = 0): int
     {
         return Show::splitLine($title, $char, $width);
     }
@@ -144,13 +146,13 @@ class Output
     /**
      * 列表
      *
-     * @param  array       $data      一维数组
-     * @param  string|null  $title    标题
-     * @param  boolean $sequence 是否是有序列表
-     * @param  array        $opts     额外配置参数
+     * @param  array       $data    一维数组
+     * @param  string|null  $title  标题
+     * @param  boolean $sequence    是否是有序列表
+     * @param  array        $opts   额外配置参数
      * @return integer
      */
-    public function dataList($data, $title = null, $sequence = false, array $opts = [])
+    public function dataList(array $data, string $title = null, bool $sequence = false, array $opts = []): int
     {
         return Show::dataList($data, $title, $sequence, $opts);
     }
@@ -163,7 +165,7 @@ class Output
      * @param  array  $opts  表列名称
      * @return integer
      */
-    public function table(array $data, $title = 'Data Table', array $columns = [])
+    public function table(array $data, string $title = 'Data Table', array $columns = []): int
     {
         return Table::create($data, $title, ['columns' => $columns]);
     }
@@ -176,7 +178,7 @@ class Output
      * @param integer $flags    json_encode参数
      * @return integer|string
      */
-    public function json($data, $echo = true, $flags = JSON_UNESCAPED_UNICODE)
+    public function json(array $data, bool $echo = true, $flags = JSON_UNESCAPED_UNICODE)
     {
         $string = json_encode($data, $flags);
 
@@ -193,7 +195,7 @@ class Output
      * @param mixed $args   数据集
      * @return integer
      */
-    public function dump(...$args)
+    public function dump(...$args): int
     {
         ob_start();
         var_dump(...$args);

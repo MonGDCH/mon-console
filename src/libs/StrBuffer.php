@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console\libs;
 
 /**
- * 字符串对象话
+ * 字符串对象buffer
  * 
  * @author Mon <985558837@qq.com>
  * @version 1.0.0
@@ -21,8 +23,9 @@ final class StrBuffer
      * 构造方法
      *
      * @param string $content
+     * @return void
      */
-    public function __construct($content = '')
+    public function __construct(string $content = '')
     {
         $this->body = $content;
     }
@@ -33,7 +36,7 @@ final class StrBuffer
      * @param string $content
      * @return void
      */
-    public function write($content)
+    public function write(string $content)
     {
         $this->body .= $content;
     }
@@ -44,7 +47,7 @@ final class StrBuffer
      * @param string $content
      * @return void
      */
-    public function append($content)
+    public function append(string $content)
     {
         $this->write($content);
     }
@@ -55,7 +58,7 @@ final class StrBuffer
      * @param string $content
      * @return void
      */
-    public function prepend($content)
+    public function prepend(string $content)
     {
         $this->body = $content . $this->body;
     }
@@ -86,7 +89,7 @@ final class StrBuffer
      * @param string $body
      * @return void
      */
-    public function setBody($body)
+    public function setBody(string $body)
     {
         $this->body = $body;
     }

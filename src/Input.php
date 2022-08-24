@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mon\console;
 
 use mon\console\libs\Parse;
@@ -81,7 +83,7 @@ class Input
 	 * @param array $argv
 	 * @return Input
 	 */
-	public static function instance($argv = null)
+	public static function instance($argv = null): Input
 	{
 		if (is_null(self::$instance)) {
 			self::$instance = new self($argv);
@@ -116,7 +118,7 @@ class Input
 	 * @param  bool $nl true 会添加换行符 false 原样输出，不添加换行符
 	 * @return string
 	 */
-	public function read($question = null, $nl = false)
+	public function read(string $question = null, bool $nl = false): string
 	{
 		if ($question) {
 			fwrite(STDOUT, $question . ($nl ? "\n" : ''));
@@ -131,7 +133,7 @@ class Input
 	 * @param string $tips	提示信息
 	 * @return string
 	 */
-	public function password($tips = 'Please Enter Password:')
+	public function password($tips = 'Please Enter Password:'): string
 	{
 		return Password::interaction($tips);
 	}
@@ -141,7 +143,7 @@ class Input
 	 *
 	 * @return string
 	 */
-	public function getPwd()
+	public function getPwd(): string
 	{
 		if (!$this->pwd) {
 			$this->pwd = getcwd();
@@ -154,26 +156,26 @@ class Input
 	 * 获取参数
 	 *
 	 * @param string $key		参数名
-	 * @param mixed $defalue	默认参数值
+	 * @param mixed $default	默认参数值
 	 * @return mixed			结果值
 	 */
-	public function getArgs($key = null, $defalue = null)
+	public function getArgs(string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->args;
 		}
 
-		return isset($this->args[$key]) ? $this->args[$key] : $defalue;
+		return isset($this->args[$key]) ? $this->args[$key] : $default;
 	}
 
 	/**
 	 * 设置参数
 	 *
-	 * @param array $val	配置值
+	 * @param array $val		配置值
 	 * @param boolean $replace	是否替换
 	 * @return Input
 	 */
-	public function setArgs(array $val, $replace = false)
+	public function setArgs(array $val, $replace = false): Input
 	{
 		$this->args = $replace ? $val : array_merge($this->args, $val);
 
@@ -184,16 +186,16 @@ class Input
 	 * 获取短标签
 	 *
 	 * @param string $key		标签名
-	 * @param mixed $defalue	默认值
+	 * @param mixed $default	默认值
 	 * @return mixed			标签值
 	 */
-	public function getSopt($key = null, $defalue = null)
+	public function getSopt(string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->sOpts;
 		}
 
-		return isset($this->sOpts[$key]) ? $this->sOpts[$key] : $defalue;
+		return isset($this->sOpts[$key]) ? $this->sOpts[$key] : $default;
 	}
 
 	/**
@@ -203,7 +205,7 @@ class Input
 	 * @param boolean $replace	是否替换
 	 * @return Input
 	 */
-	public function setSopt(array $val, $replace = false)
+	public function setSopt(array $val, $replace = false): Input
 	{
 		$this->sOpts = $replace ? $val : array_merge($this->sOpts, $val);
 
@@ -214,16 +216,16 @@ class Input
 	 * 获取长标签
 	 *
 	 * @param string $key		标签名
-	 * @param string $defalue	默认值
+	 * @param mixed $default	默认值
 	 * @return mixed
 	 */
-	public function getlopt($key = null, $defalue = null)
+	public function getlopt(string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->lOpts;
 		}
 
-		return isset($this->lOpts[$key]) ? $this->lOpts[$key] : $defalue;
+		return isset($this->lOpts[$key]) ? $this->lOpts[$key] : $default;
 	}
 
 	/**
@@ -233,17 +235,18 @@ class Input
 	 * @param boolean $replace	是否替换
 	 * @return Input
 	 */
-	public function setlopt(array $val, $replace = false)
+	public function setlopt(array $val, $replace = false): Input
 	{
 		$this->lOpts = $replace ? $val : array_merge($this->lOpts, $val);
+		return $this;
 	}
 
 	/**
 	 * 获取指令
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	public function getCommand()
+	public function getCommand(): ?string
 	{
 		return $this->command;
 	}
@@ -254,7 +257,7 @@ class Input
 	 * @param string $command	指令名
 	 * @return Input
 	 */
-	public function setCommand($command)
+	public function setCommand($command): Input
 	{
 		$this->command = $command;
 

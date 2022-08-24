@@ -1,7 +1,12 @@
 <?php
 
-class Test implements \mon\console\Command
+use mon\console\Command;
+
+class Test extends Command
 {
+	protected static $defaultName = 'tests';
+
+
 	/**
 	 * 执行指令
 	 *
@@ -11,7 +16,7 @@ class Test implements \mon\console\Command
 	{
 		$name = $input->read('What\'s your name?  ');
 		$password = $input->password();
-		
-		return $output->write('Hello '.$name.', Your password is '.$password);
+
+		return $output->write('Hello ' . $name . ', Your password is ' . $password);
 	}
 }
