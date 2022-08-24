@@ -130,7 +130,7 @@ class Show
      * ```
      * @param array $data   数据源
      * @param string $title 标题
-     * @param boolean $sequence  开启间隔
+     * @param boolean $sequence  是否是有序列表
      * @param array $opts  样式参数
      * @return integer
      */
