@@ -144,7 +144,7 @@ class Util
 
         foreach ($data as $key => $value) {
             if (!$expectInt || !is_numeric($key)) {
-                $width = mb_strlen($key, 'UTF-8');
+                $width = mb_strlen((string)$key, 'UTF-8');
                 $keyMaxWidth = $width > $keyMaxWidth ? $width : $keyMaxWidth;
             }
         }
@@ -207,7 +207,7 @@ class Util
 
                 foreach ($value as $k => $val) {
                     if (is_bool($val)) {
-                        $val = $val ? '(True)' : '(False)';
+                        $val = $val ? '(true)' : '(false)';
                     } else {
                         $val = is_scalar($val) ? (string) $val : gettype($val);
                     }
@@ -218,7 +218,7 @@ class Util
                 $value = rtrim($temp, ' ,');
             } else {
                 if (is_bool($value)) {
-                    $value = $value ? '(True)' : '(False)';
+                    $value = $value ? '(true)' : '(false)';
                 } else {
                     $value = (string) $value;
                 }
