@@ -41,7 +41,7 @@ final class Parse
             if ($token[0] == '-') {
                 $isLong = false;
                 $option = substr($token, 1);
-                $value = true;
+                $value = 'true';
 
                 // 长标签处理
                 if ($option[0] === '-') {

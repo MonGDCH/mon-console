@@ -80,27 +80,22 @@ class Input
 	/**
 	 * 获取实例
 	 *
-	 * @param array $argv
 	 * @return Input
 	 */
-	public static function instance($argv = null): Input
+	public static function instance(): Input
 	{
 		if (is_null(self::$instance)) {
-			self::$instance = new self($argv);
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
 
 	/**
 	 * 构造方法
-	 *
-	 * @param array  $argv  请求参数
 	 */
-	protected function __construct($argv = null)
+	protected function __construct()
 	{
-		if (is_null($argv)) {
-			$argv = $_SERVER['argv'];
-		}
+		global $argv;
 
 		$this->data = $argv;
 		$this->pwd = $this->getPwd();

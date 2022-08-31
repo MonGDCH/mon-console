@@ -138,11 +138,9 @@ class Console
 	{
 		if ($handler instanceof Closure) {
 			// 匿名函数
-			// return call_user_func_array($handler, [$this->input, $this->output]);
 			return $handler($this->input, $this->output);
 		} elseif (class_exists($handler) && is_subclass_of($handler, "\\mon\\console\\interfaces\\Command")) {
 			$instance = new $handler();
-			// return call_user_func_array([$instance, 'execute'], [$this->input, $this->output]);
 			return $instance->execute($this->input, $this->output);
 		}
 

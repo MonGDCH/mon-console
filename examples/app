@@ -6,14 +6,15 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/command/Demo.php';
 require __DIR__ . '/command/Test.php';
 
+
 // 获取应用实例
 $app = \mon\console\App::instance();
 
 // 注册简单指令
-$app->add('test', Test::class, 'This is Test Command!');
+$app->add('test', \command\Test::class, 'This is Test Command!');
 
 // 注册包含别名的指令
-$app->add('demo', Demo::class, ['alias' => 'd', 'desc' => 'This is Demo Command!']);
+$app->add('demo', \command\Demo::class, ['alias' => 'd', 'desc' => 'This is Demo Command!']);
 
 // 使用匿名方法作为指令回调
 $app->add('hello', function($input, $output){

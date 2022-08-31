@@ -11,7 +11,7 @@ require __DIR__ . '/command/test/C.php';
 
 $app = new App;
 
-$path =  './command';
+$path = __DIR__ . '/command';
 $namspace = 'command';
 
 $app->setTitle('Wellcome Mon Console');
