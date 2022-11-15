@@ -10,6 +10,7 @@ class Demo extends Command
 
 	protected static $defaultDescription = 'This is Demo Command!';
 
+	protected static $defaultGroup = 'aaa';
 
 	/**
 	 * 执行指令

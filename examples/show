@@ -28,7 +28,7 @@ $data = [
 mon\console\libs\Table::create($data, 'test', ['columns' => ['id', 'A', 'F']]);
 
 $list = [
-    'a' => 'aaa',
+    'a' => ['aa' => 'vv', 'bb' => 'cc'],
     'b' => 'bbb',
 ];
 

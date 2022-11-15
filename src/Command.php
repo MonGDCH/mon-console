@@ -35,6 +35,13 @@ abstract class Command implements \mon\console\interfaces\Command
 	protected static $defaultDescription;
 
 	/**
+	 * 默认指令组别
+	 *
+	 * @var string
+	 */
+	protected static $defaultGroup = 'available';
+
+	/**
 	 * 执行指令的接口方法
 	 *
 	 * @param Input $input		输入实例
@@ -71,5 +78,15 @@ abstract class Command implements \mon\console\interfaces\Command
 	public static function getCommandDesc(): ?string
 	{
 		return static::$defaultDescription;
+	}
+
+	/**
+	 * 获取指令组别
+	 *
+	 * @return string
+	 */
+	public static function getCommandGroup(): string
+	{
+		return static::$defaultGroup;
 	}
 }

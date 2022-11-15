@@ -184,6 +184,8 @@ class Style
      */
     public static function supportColor(): bool
     {
+        return true;
+
         if (DIRECTORY_SEPARATOR === '\\') {
             return '10.0.10586' === PHP_WINDOWS_VERSION_MAJOR . '.' . PHP_WINDOWS_VERSION_MINOR . '.' . PHP_WINDOWS_VERSION_BUILD || false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI') || 'xterm' === getenv('TERM');
         }

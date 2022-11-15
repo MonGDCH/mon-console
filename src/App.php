@@ -110,14 +110,18 @@ class App
                 }
                 // 获取指令别名及指令描述
                 $alias = $desc = null;
+                $group = 'available';
                 if (method_exists($className, 'getCommandAliasName')) {
                     $alias = $className::getCommandAliasName();
                 }
                 if (method_exists($className, 'getCommandDesc')) {
                     $desc = $className::getCommandDesc();
                 }
+                if (method_exists($className, 'getCommandGroup')) {
+                    $group = $className::getCommandGroup();
+                }
                 // 注册指令
-                $this->add($command, $className, ['alias' => $alias, 'desc' => $desc]);
+                $this->add($command, $className, ['alias' => $alias, 'desc' => $desc, 'group' => $group]);
             }
         }
 

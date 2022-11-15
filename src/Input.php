@@ -46,7 +46,7 @@ class Input
 	/**
 	 * 执行的脚本
 	 *
-	 * @var array
+	 * @var string
 	 */
 	protected $script;
 
@@ -104,6 +104,26 @@ class Input
 
 		// 解析参数
 		list($this->command, $this->args, $this->sOpts, $this->lOpts) = Parse::parseArgv($argv);
+	}
+
+	/**
+	 * 获取执行的脚本
+	 *
+	 * @return string
+	 */
+	public function getScript(): string
+	{
+		return $this->script;
+	}
+
+	/**
+	 * 获取完整的请求脚本
+	 *
+	 * @return string
+	 */
+	public function getFullScript(): string
+	{
+		return $this->fullScript;
 	}
 
 	/**

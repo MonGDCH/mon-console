@@ -8,6 +8,7 @@ use Closure;
 use Throwable;
 use mon\console\Input;
 use mon\console\Output;
+use mon\console\libs\Util;
 use mon\console\libs\Style;
 use InvalidArgumentException;
 use mon\console\exception\ConsoleException;
@@ -53,7 +54,15 @@ class Console
 	 *
 	 * @var string
 	 */
-	protected $title = '';
+	protected $title = <<<TITLE
+  _____   _       _____             _____   _____  
+ / ____| | |     |_   _|     /\    |  __ \ |  __ \ 
+| |      | |       | |      /  \   | |__) || |__) |
+| |      | |       | |     / /\ \  |  ___/ |  ___/ 
+| |____  | |____  _| |_   / ____ \ | |     | |     
+ \_____| |______||_____| /_/    \_\|_|     |_|     
+													 
+TITLE;
 
 	/**
 	 * 指令的描述
@@ -63,7 +72,8 @@ class Console
 	protected $messages = [
 		'help'	=> [
 			'alias'	=> 'h',
-			'desc'	=> 'Display help for command'
+			'group'	=> 'internal',
+			'desc'	=> 'Show command help information'
 		],
 	];
 
@@ -159,7 +169,7 @@ class Console
 	{
 		$parse = $this->parseOption($option);
 
-		return $this->recordMessgae($command, $parse['desc'], $parse['alias'])->recordHandle($command, $handle, $parse['alias']);
+		return $this->recordMessgae($command, $parse['group'], $parse['desc'], $parse['alias'])->recordHandle($command, $handle, $parse['alias']);
 	}
 
 	/**
@@ -174,7 +184,7 @@ class Console
 	{
 		$this->commands[$command] = $handle;
 		if (!is_null($alias)) {
-			$alias = ($alias[0] == '-') ? $alias : '-' . $alias;
+			$alias = '-' . $alias;
 			$this->commands[$alias] = $handle;
 		}
 
@@ -189,16 +199,13 @@ class Console
 	 * @param string $alias		指令别名
 	 * @return Console
 	 */
-	protected function recordMessgae(string $command, string $desc = null, string $alias = null): Console
+	protected function recordMessgae(string $command, string $group, string $desc = null, string $alias = null): Console
 	{
-		if (is_null($alias)) {
-			$this->messages[$command] = $desc;
-		} else {
-			$this->messages[$command] = [
-				'desc'	=> $desc,
-				'alias'	=> $alias
-			];
-		}
+		$this->messages[$command] = [
+			'desc'	=> $desc,
+			'alias'	=> $alias,
+			'group'	=> $group
+		];
 
 		return $this;
 	}
@@ -216,9 +223,11 @@ class Console
 		if (is_array($option)) {
 			$parse['desc'] = $option['desc'] ?? null;
 			$parse['alias'] = $option['alias'] ?? null;
+			$parse['group'] = $option['group'] ?? 'available';
 		} elseif (is_string($option)) {
 			$parse['desc'] = $option;
 			$parse['alias'] = null;
+			$parse['group'] = 'available';
 		} else {
 			throw new InvalidArgumentException('Command option invalid arguments.');
 		}
@@ -234,21 +243,37 @@ class Console
 	public function showHelp()
 	{
 		$this->output->write("\n" . $this->title);
-		$columns = ['command', 'alias', 'desc'];
+		$this->output->write(Util::wrapTag('Usage:', 'yellow'), true);
+		$this->output->write('php ' . $this->input->getScript() . ' ' . Util::wrapTag('{{command}}', 'green') . ' [--opt -v -h ...] [arg0 arg1 arg2=value2 ...]' . PHP_EOL, true);
+		// 整理指令信息
 		$data = [];
 		foreach ($this->messages as $command => $option) {
-			if (is_array($option)) {
-				$desc = $option['desc'] ?: '';
-				$alias = '-' . $option['alias'];
-			} else {
-				$desc = $option ?: '';
-				$alias = '';
+			$group = $option['group'] ?: 'available';
+			$desc = $option['desc'] ?: '';
+			$alias = $option['alias'] ?: '';
+
+			$data[strtolower($group)][$command] = [
+				'desc'	=> $desc,
+				'alias'	=> $alias
+			];
+		}
+		// 整理数据内容
+		$string = '';
+		foreach ($data as $group => $cmds) {
+			$groupStr = '';
+			$groupStr .= Util::wrapTag('- ' . ucfirst($group) . ' Commands:', 'white') . PHP_EOL;
+			$len = Util::getKeyMaxWidth($cmds) + 4;
+			foreach ($cmds as $cmd => $opt) {
+				$str = '  ' . Util::wrapTag(str_pad($cmd, $len, ' '), 'success') . ' ' . $opt['desc'];
+				if (isset($opt['alias']) && !empty($opt['alias'])) {
+					$str .= Util::wrapTag(' (alias: ' . $opt['alias'] . ') ', 'cyan');
+				}
+				$groupStr .= $str . PHP_EOL;
 			}
-			$data[] = [$command, $alias, $desc];
+			$string .= $groupStr . PHP_EOL;
 		}
 
-		$this->output->table($data, 'Help', $columns);
-		exit(0);
+		return $this->output->write($string, true, true);
 	}
 
 	/**
