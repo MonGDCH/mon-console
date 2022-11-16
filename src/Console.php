@@ -91,7 +91,7 @@ TITLE;
 	}
 
 	/**
-	 * 设置应用名
+	 * 设置应用标题
 	 *
 	 * @param string $title
 	 * @return Console
@@ -100,6 +100,16 @@ TITLE;
 	{
 		$this->title = $title;
 		return $this;
+	}
+
+	/**
+	 * 获取应用标题
+	 *
+	 * @return string
+	 */
+	public function getTitle(): string
+	{
+		return $this->title;
 	}
 
 	/**
