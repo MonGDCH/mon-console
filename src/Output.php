@@ -7,6 +7,7 @@ namespace mon\console;
 use STDERR;
 use mon\console\libs\Show;
 use mon\console\libs\Table;
+use mon\console\libs\Spinner;
 
 /**
  * 输出操作类
@@ -202,5 +203,35 @@ class Output
         $string = ob_get_clean();
 
         return Show::write(preg_replace("/=>\n\s+/", '=> ', trim($string)));
+    }
+
+    /**
+     * 开始渲染loading
+     *
+     * @return void
+     */
+    public function spinBegiin(): void
+    {
+        Spinner::instance()->begin();
+    }
+
+    /**
+     * 渲染loading
+     *
+     * @return void
+     */
+    public function spin(): void
+    {
+        Spinner::instance()->spin();
+    }
+
+    /**
+     * 渲染loading结束
+     *
+     * @return void
+     */
+    public function spinEnd(): void
+    {
+        Spinner::instance()->end();
     }
 }
