@@ -78,6 +78,13 @@ TITLE;
 	];
 
 	/**
+	 * 是否显示帮助信息指令
+	 *
+	 * @var boolean
+	 */
+	protected $showHelpCommand = false;
+
+	/**
 	 * 初始化
 	 *
 	 * @param Input|null $input		输入对象实例
@@ -103,6 +110,18 @@ TITLE;
 	}
 
 	/**
+	 * 设置默认是否显示help指令
+	 *
+	 * @param boolean $show
+	 * @return Console
+	 */
+	public function setShowHelpCommand(bool $show): Console
+	{
+		$this->showHelpCommand = $show;
+		return $this;
+	}
+
+	/**
 	 * 获取应用标题
 	 *
 	 * @return string
@@ -110,6 +129,16 @@ TITLE;
 	public function getTitle(): string
 	{
 		return $this->title;
+	}
+
+	/**
+	 * 获取设置显示帮助信息指令
+	 *
+	 * @return boolean
+	 */
+	public function getShowHelpCommand(): bool
+	{
+		return $this->showHelpCommand;
 	}
 
 	/**
@@ -252,7 +281,7 @@ TITLE;
 	 */
 	public function showHelp()
 	{
-		$this->output->write("\n" . $this->title);
+		$this->title && $this->output->write("\n" . $this->title);
 		$this->output->write(Util::wrapTag('Usage:', 'yellow'), true);
 		$this->output->write('php ' . $this->input->getScript() . ' ' . Util::wrapTag('{{command}}', 'green') . ' [--opt -v -h ...] [arg0 arg1 arg2=value2 ...]' . PHP_EOL, true);
 		// 整理指令信息
@@ -261,6 +290,10 @@ TITLE;
 			$group = $option['group'] ?: 'available';
 			$desc = $option['desc'] ?: '';
 			$alias = $option['alias'] ?: '';
+
+			if (!$this->showHelpCommand && $command == 'help' && $group == 'internal') {
+				continue;
+			}
 
 			$data[strtolower($group)][$command] = [
 				'desc'	=> $desc,

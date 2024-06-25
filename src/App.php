@@ -12,7 +12,7 @@ use RecursiveDirectoryIterator;
  * 应用驱动
  *
  * @author Mon <98558837@qq.om>
- * @version 1.1.0
+ * @version 1.1.4
  */
 class App
 {
@@ -21,7 +21,7 @@ class App
      * 
      * @var string
      */
-    const VERSION = '1.1.0';
+    const VERSION = '1.1.4';
 
     /**
      * 对象单例
@@ -162,6 +162,18 @@ class App
     public function setTitle(string $title): App
     {
         $this->console->setTitle($title);
+        return $this;
+    }
+
+    /**
+     * 设置默认是否显示help指令
+     *
+     * @param boolean $show
+     * @return App
+     */
+    public function setShowHelpCommand(bool $show): App
+    {
+        $this->console->setShowHelpCommand($show);
         return $this;
     }
 
