@@ -21,7 +21,7 @@ class App
      * 
      * @var string
      */
-    const VERSION = '1.1.4';
+    const VERSION = '1.1.5';
 
     /**
      * 对象单例

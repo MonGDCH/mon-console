@@ -18,7 +18,7 @@ class Input
 	/**
 	 * 单例实体
 	 *
-	 * @var null
+	 * @var Input
 	 */
 	protected static $instance = null;
 
