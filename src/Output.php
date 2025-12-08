@@ -17,6 +17,13 @@ use mon\console\libs\Spinner;
  */
 class Output
 {
+    // 颜色常量
+    const RESET = "\033[0m";
+    const ERRPR = "\033[31m";
+    const SUCCESS = "\033[32m";
+    const WARING = "\033[33m";
+    const INFO = "\033[34m";
+
     /**
      * 单例实体
      *
@@ -100,7 +107,7 @@ class Output
      */
     public function error(string $text = '', bool $nl = true): int
     {
-        fwrite($this->errorStream, $text . ($nl ? "\n" : null));
+        fwrite($this->errorStream, self::ERRPR . $text . self::RESET . ($nl ? "\n" : null));
 
         return 0;
     }

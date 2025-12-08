@@ -30,6 +30,19 @@ class Show
     private static $buffering = false;
 
     /**
+     * 颜色样式
+     *
+     * @var array
+     */
+    private static $styles = [
+        'reset'     => "\033[0m",
+        'error'     => "\033[31m",
+        'success'   => "\033[32m",
+        'warning'   => "\033[33m",
+        'info'      => "\033[34m",
+    ];
+
+    /**
      * 消息写入标准输出流
      *
      * @param string|array $messages    输出的消息
@@ -86,7 +99,9 @@ class Show
 
         // 添加消息类型
         if (null !== $type) {
-            $messages[0] = sprintf('[%s] %s', strtoupper($type), $messages[0]);
+            $color = strtolower($type);
+            $style = self::$styles[$color] ?? self::$styles['reset'];
+            $messages[0] = sprintf('%s[%s] %s %s', $style, strtoupper($type), $messages[0], self::$styles['reset']);
         }
 
         $text = implode(PHP_EOL, $messages);
