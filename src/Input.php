@@ -96,14 +96,14 @@ class Input
 	protected function __construct()
 	{
 		global $argv;
-
-		$this->data = $argv;
+		$cmd = $argv;
+		$this->data = $cmd;
 		$this->pwd = $this->getPwd();
-		$this->fullScript = implode(' ', $argv);
-		$this->script = array_shift($argv);
+		$this->fullScript = implode(' ', $cmd);
+		$this->script = array_shift($cmd);
 
 		// 解析参数
-		list($this->command, $this->args, $this->sOpts, $this->lOpts) = Parse::parseArgv($argv);
+		list($this->command, $this->args, $this->sOpts, $this->lOpts) = Parse::parseArgv($cmd);
 	}
 
 	/**

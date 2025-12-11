@@ -21,15 +21,15 @@ final class Parse
     /**
      * 解析argv参数
      *
-     * @param  array  $argv 请求参数
+     * @param  array  $data 请求参数
      * @return array
      */
-    public static function parseArgv(array $argv): array
+    public static function parseArgv(array $data): array
     {
         $args = $short_opts = $long_opts = [];
         $isCommand = true;
         $command = null;
-        while (null !== $token = array_shift($argv)) {
+        while (null !== $token = array_shift($data)) {
             // 第一个标签为指令
             if ($isCommand) {
                 $command = $token;
