@@ -90,7 +90,7 @@ TITLE;
 	 * @param Input|null $input		输入对象实例
 	 * @param Output|null $output	输出对象实例
 	 */
-	public function __construct(Input $input = null, Output $output = null)
+	public function __construct(?Input $input = null, ?Output $output = null)
 	{
 		$this->input = $input ?: Input::instance();
 		$this->output = $output ?: Output::instance();
@@ -219,10 +219,10 @@ TITLE;
 	 * @param string $alias		指令别名
 	 * @return Console
 	 */
-	protected function recordHandle(string $command, $handle, string $alias = null): Console
+	protected function recordHandle(string $command, mixed $handle, string $alias = ''): Console
 	{
 		$this->commands[$command] = $handle;
-		if (!is_null($alias)) {
+		if ($alias) {
 			$alias = '-' . $alias;
 			$this->commands[$alias] = $handle;
 		}
@@ -238,7 +238,7 @@ TITLE;
 	 * @param string $alias		指令别名
 	 * @return Console
 	 */
-	protected function recordMessgae(string $command, string $group, string $desc = null, string $alias = null): Console
+	protected function recordMessgae(string $command, string $group, string $desc = '', string $alias = ''): Console
 	{
 		$this->messages[$command] = [
 			'desc'	=> $desc,
@@ -260,12 +260,12 @@ TITLE;
 	{
 		$parse = [];
 		if (is_array($option)) {
-			$parse['desc'] = $option['desc'] ?? null;
-			$parse['alias'] = $option['alias'] ?? null;
+			$parse['desc'] = $option['desc'] ?? '';
+			$parse['alias'] = $option['alias'] ?? '';
 			$parse['group'] = $option['group'] ?? 'available';
 		} elseif (is_string($option)) {
 			$parse['desc'] = $option;
-			$parse['alias'] = null;
+			$parse['alias'] = '';
 			$parse['group'] = 'available';
 		} else {
 			throw new InvalidArgumentException('Command option invalid arguments.');

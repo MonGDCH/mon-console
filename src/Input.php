@@ -133,7 +133,7 @@ class Input
 	 * @param  bool $nl true 会添加换行符 false 原样输出，不添加换行符
 	 * @return string
 	 */
-	public function read(string $question = null, bool $nl = false): string
+	public function read(string $question = '', bool $nl = false): string
 	{
 		if ($question) {
 			fwrite(STDOUT, $question . ($nl ? "\n" : ''));
@@ -174,7 +174,7 @@ class Input
 	 * @param mixed $default	默认参数值
 	 * @return mixed			结果值
 	 */
-	public function getArgs(string $key = null, $default = null)
+	public function getArgs(?string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->args;
@@ -204,7 +204,7 @@ class Input
 	 * @param mixed $default	默认值
 	 * @return mixed			标签值
 	 */
-	public function getSopt(string $key = null, $default = null)
+	public function getSopt(?string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->sOpts;
@@ -234,7 +234,7 @@ class Input
 	 * @param mixed $default	默认值
 	 * @return mixed
 	 */
-	public function getlopt(string $key = null, $default = null)
+	public function getlopt(?string $key = null, $default = null)
 	{
 		if (is_null($key)) {
 			return $this->lOpts;

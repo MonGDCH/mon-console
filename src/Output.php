@@ -34,7 +34,7 @@ class Output
     /**
      * 错误输出流
      *
-     * @var STDERR
+     * @var resource
      */
     protected $errorStream = STDERR;
 
@@ -146,7 +146,7 @@ class Output
      * @param integer $width    宽度
      * @return integer
      */
-    public function splitLine(string $title = null, string $char = '-', int $width = 0): int
+    public function splitLine(string $title = '', string $char = '-', int $width = 0): int
     {
         return Show::splitLine($title, $char, $width);
     }
@@ -154,13 +154,13 @@ class Output
     /**
      * 列表
      *
-     * @param  array       $data    一维数组
-     * @param  string|null  $title  标题
-     * @param  boolean $sequence    是否是有序列表
-     * @param  array        $opts   额外配置参数
+     * @param  array       $data        一维数组
+     * @param  string      $title       标题
+     * @param  boolean     $sequence    是否是有序列表
+     * @param  array       $opts        额外配置参数
      * @return integer
      */
-    public function dataList(array $data, string $title = null, bool $sequence = false, array $opts = []): int
+    public function dataList(array $data, string $title = '', bool $sequence = false, array $opts = []): int
     {
         return Show::dataList($data, $title, $sequence, $opts);
     }

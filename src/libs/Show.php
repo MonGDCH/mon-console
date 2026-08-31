@@ -117,7 +117,7 @@ class Show
      * @param int $width    宽度，默认整屏
      * @return integer
      */
-    public static function splitLine(string $title = null, string $char = '-', int $width = 0): int
+    public static function splitLine(string $title = '', string $char = '-', int $width = 0): int
     {
         if ($width <= 0) {
             list($width,) = Util::getScreenSize();
@@ -149,7 +149,7 @@ class Show
      * @param array $opts  样式参数
      * @return integer
      */
-    public static function dataList(array $data, string $title = null, bool $sequence = false, array $opts = []): int
+    public static function dataList(array $data, string $title = '', bool $sequence = false, array $opts = []): int
     {
         $string = '';
         $opts = array_merge([

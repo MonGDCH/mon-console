@@ -239,7 +239,7 @@ class Util
      * @param string $cwd       指令路径
      * @return string
      */
-    public static function execute(string $command, string $cwd = null): string
+    public static function execute(string $command, string $cwd = ''): string
     {
         $return_var = 1;
 
